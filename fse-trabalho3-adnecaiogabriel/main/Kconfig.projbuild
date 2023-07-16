@@ -45,11 +45,11 @@ menu "Seleção de Configuração de Placa"
       default ESP0
 
       config ESP0
-          bool "Buzzer + DHT"
+          bool "Sensor de Hall + DHT"
       config ESP1
-          bool "Sensor de batimentos + Fotoresistor"
+          bool "Buzzer + Sensor de toque"
       config ESP2
-          bool "Sensor de fogo + LED"
+          bool "Sensor de som + LED"
   endchoice
 
   config ESP_CONFIG_NUMBER
