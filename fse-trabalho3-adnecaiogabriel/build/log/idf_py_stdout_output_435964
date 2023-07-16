@@ -1,0 +1,32 @@
+[1/11] Performing build step for 'bootloader'
+[1/1] cd /home/gabriel/github-classroom/FGA-FSE/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/build/bootloader/esp-idf/esptool_py && /home/gabriel/.espressif/python_env/idf5.1_py3.10_env/bin/python /home/gabriel/esp/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 bootloader 0x1000 /home/gabriel/github-classroom/FGA-FSE/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/build/bootloader/bootloader.bin
+Bootloader binary size 0x6810 bytes. 0x7f0 bytes (7%) free.
+[2/9] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/mqtt.c.obj
+/home/gabriel/github-classroom/FGA-FSE/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/main/mqtt.c: In function 'mqtt_event_handler':
+/home/gabriel/github-classroom/FGA-FSE/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/main/mqtt.c:47:17: warning: unused variable 'msg_id' [-Wunused-variable]
+   47 |             int msg_id = esp_mqtt_client_subscribe(client, "v1/devices/me/rpc/request/+", 0);
+      |                 ^~~~~~
+/home/gabriel/github-classroom/FGA-FSE/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/main/mqtt.c:42:9: warning: unused variable 'msg_id' [-Wunused-variable]
+   42 |     int msg_id;
+      |         ^~~~~~
+/home/gabriel/github-classroom/FGA-FSE/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/main/mqtt.c: In function 'mqtt_start':
+/home/gabriel/github-classroom/FGA-FSE/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/main/mqtt.c:100:12: warning: unused variable 'esp2_token' [-Wunused-variable]
+  100 |       char esp2_token[20] = "";
+      |            ^~~~~~~~~~
+[3/9] Building C object esp-idf/main/CMakeFiles/__idf_main.dir/json_parser.c.obj
+/home/gabriel/github-classroom/FGA-FSE/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/main/json_parser.c: In function 'mqtt_event_data_parser':
+/home/gabriel/github-classroom/FGA-FSE/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/main/json_parser.c:18:9: warning: variable 'rst' set but not used [-Wunused-but-set-variable]
+   18 |     int rst;
+      |         ^~~
+[4/9] Linking C static library esp-idf/main/libmain.a
+[5/9] Generating ld/sections.ld
+[6/9] Building C object CMakeFiles/fse-trabalho3-adnecaiogabriel.elf.dir/project_elf_src_esp32.c.obj
+[7/9] Linking CXX executable fse-trabalho3-adnecaiogabriel.elf
+[8/9] Generating binary image from built executable
+esptool.py v4.6.2
+Creating esp32 image...
+Merged 25 ELF sections
+Successfully created esp32 image.
+Generated /home/gabriel/github-classroom/FGA-FSE/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/build/fse-trabalho3-adnecaiogabriel.bin
+[9/9] cd /home/gabriel/github-classroom/FGA-FSE/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/build/esp-idf/esptool_py && /home/gabriel/.espressif/python_env/idf5.1_py3.10_env/bin/python /home/gabriel/esp/esp-idf/components/partition_table/check_sizes.py --offset 0x8000 partition --type app /home/gabriel/github-classroom/FGA-FSE/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/build/partition_table/partition-table.bin /home/gabriel/github-classroom/FGA-FSE/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/build/fse-trabalho3-adnecaiogabriel.bin
+fse-trabalho3-adnecaiogabriel.bin binary size 0xd9210 bytes. Smallest app partition is 0x100000 bytes. 0x26df0 bytes (15%) free.
