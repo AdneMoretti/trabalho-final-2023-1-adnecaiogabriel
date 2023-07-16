@@ -4,6 +4,8 @@
     "idf.flashType": "UART",
     "idf.port": "/dev/ttyUSB0",
     "files.associations": {
-        "err.h": "c"
+        "err.h": "c",
+        "adc_module.h": "c",
+        "json_parser.h": "c"
     }
 }

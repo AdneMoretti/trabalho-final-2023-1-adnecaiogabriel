@@ -5,6 +5,8 @@
 #include "esp_event.h"
 #include "mqtt_client.h"
 
+#define TAG "MQTT"
+
 void set_attributes_states(char *key, int value, int topic_id)
 {
 }
@@ -24,4 +26,36 @@ void mqtt_event_data_parser(char *data, char *topic)
     if(strstr(key, "set") != NULL){
         set_attributes_states(key, value, topic_id);
     }
+}
+
+void send_sound_alert(int *sound)
+{
+
+    cJSON *root = cJSON_CreateObject();
+    if (root == NULL)
+    {
+        ESP_LOGE(TAG, "Não foi possível criar o JSON");
+        return;
+    }
+
+    double sound_toDouble = *(int *)sound;
+    
+    cJSON_AddItemToObject(root, "alertaFogo", cJSON_CreateNumber(sound_toDouble));
+    mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
+}
+
+void send_sound_telemetry(int *sound)
+{
+
+    cJSON *root = cJSON_CreateObject();
+    if (root == NULL)
+    {
+        ESP_LOGE(TAG, "Não foi possível criar o JSON");
+        return;
+    }
+
+    double sound_toDouble = *(int *)sound;
+    
+    cJSON_AddItemToObject(root, "sensorSom", cJSON_CreateNumber(sound_toDouble));
+    mqtt_envia_mensagem("v1/devices/me/telemetry", cJSON_Print(root));
 }
