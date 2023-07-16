@@ -17,7 +17,7 @@
 
 #include "esp_log.h"
 #include "mqtt_client.h"
-#include "json_parser.h"
+// #include "json_parser.h"
 
 #include "mqtt.h"
 
@@ -66,6 +66,10 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
             printf("DATA=%.*s\r\n", event->data_len, event->data);
             
+            // char requestId[100];
+            // strcpy(requestId, event->topic + strlen("v1/devices/me/rpc/request/"));
+            // esp_mqtt_client_publish(client, "v1/devices/me/rpc/response/", requestId, strlen(requestId), 0, false);
+
             break;
         case MQTT_EVENT_ERROR:
             ESP_LOGI(TAG, "MQTT_EVENT_ERROR");
@@ -85,9 +89,20 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
 
 void mqtt_start()
 {   
+    char *token_dash;
+    if (ESP_CONFIG_NUMBER == 0){
+      char esp0_token[20] = "ZodDWt0knISJC2CLkRir";
+      token_dash = esp0_token;
+    } else if (ESP_CONFIG_NUMBER == 1) {
+      char esp1_token[20] = "";
+      token_dash = esp1_token;
+    } else if (ESP_CONFIG_NUMBER == 2) {
+      char esp2_token[20] = "";
+      token_dash = esp2_token;
+    };
     esp_mqtt_client_config_t mqtt_config = {
           .broker.address.uri = "mqtt://164.41.98.25",
-          .credentials.username = "ZodDWt0knISJC2CLkRir"
+          .credentials.username = token_dash
       };
     client = esp_mqtt_client_init(&mqtt_config);
     esp_mqtt_client_register_event(client, ESP_EVENT_ANY_ID, mqtt_event_handler, NULL);
