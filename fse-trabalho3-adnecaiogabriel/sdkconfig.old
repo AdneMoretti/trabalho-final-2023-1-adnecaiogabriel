@@ -337,6 +337,36 @@ CONFIG_PARTITION_TABLE_MD5=y
 # end of Partition Table
 
 #
+# Configuração do Wifi
+#
+CONFIG_ESP_WIFI_SSID="Cristiane_5G"
+CONFIG_ESP_WIFI_PASSWORD="cristiane1"
+CONFIG_ESP_MAXIMUM_RETRY=5
+# end of Configuração do Wifi
+
+#
+# Modo de Funcionamento
+#
+# CONFIG_BATTERY is not set
+CONFIG_ENERGY=y
+CONFIG_ESP_MODE=1
+# end of Modo de Funcionamento
+
+#
+# Seleção de Configuração de Placa
+#
+# CONFIG_ESP0 is not set
+# CONFIG_ESP1 is not set
+CONFIG_ESP2=y
+CONFIG_ESP_CONFIG_NUMBER=2
+# end of Seleção de Configuração de Placa
+
+#
+# Outros
+#
+# end of Outros
+
+#
 # Compiler options
 #
 CONFIG_COMPILER_OPTIMIZATION_DEFAULT=y

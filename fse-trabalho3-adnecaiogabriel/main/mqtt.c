@@ -17,7 +17,7 @@
 
 #include "esp_log.h"
 #include "mqtt_client.h"
-// #include "json_parser.h"
+#include "json_parser.h"
 
 #include "mqtt.h"
 
@@ -91,14 +91,11 @@ void mqtt_start()
 {   
     char *token_dash;
     if (ESP_CONFIG_NUMBER == 0){
-      char esp0_token[20] = "ZodDWt0knISJC2CLkRir";
-      token_dash = esp0_token;
+      token_dash = "";
     } else if (ESP_CONFIG_NUMBER == 1) {
-      char esp1_token[20] = "";
-      token_dash = esp1_token;
+      token_dash = "";
     } else if (ESP_CONFIG_NUMBER == 2) {
-      char esp2_token[20] = "";
-      token_dash = esp2_token;
+      token_dash = "ZodDWt0knISJC2CLkRir";
     };
     esp_mqtt_client_config_t mqtt_config = {
           .broker.address.uri = "mqtt://164.41.98.25",

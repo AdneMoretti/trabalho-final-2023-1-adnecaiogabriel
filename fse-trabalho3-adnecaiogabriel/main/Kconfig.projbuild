@@ -45,9 +45,15 @@ menu "Seleção de Configuração de Placa"
       default ESP0
 
       config ESP0
+<<<<<<< HEAD:fse-trabalho3-adnecaiogabriel/main/Kconfig.projbuild
           bool "Sensor de Hall + DHT"
       config ESP1
           bool "Buzzer + Sensor de toque"
+=======
+          bool "Buzzer + DHT + toque"
+      config ESP1
+          bool "Sensor magnético + umidade + buzzer"
+>>>>>>> 1aec4962c476b8df718c331ccdf3921982d11a2b:fse-trabalho3-adnecaiogabriel/main/KConfig.projbuild
       config ESP2
           bool "Sensor de som + LED"
   endchoice
