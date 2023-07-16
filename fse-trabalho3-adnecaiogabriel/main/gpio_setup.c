@@ -4,24 +4,20 @@
 #define LED_GREEN_GPIO 22
 #define LED_BLUE_GPIO 21
 #define SOUND_GPIO 19
-#define BUZZER_GPIO 2
-
-void configure_SOUND(void)
-{
-    esp_rom_gpio_pad_select_gpio(SOUND_GPIO);
-    gpio_set_direction(SOUND_GPIO, GPIO_MODE_INPUT);
-}
+#define BUZZER_PIN 2
+#define DHT11_PIN 4
 
 void configure_BUZZER(void)
 {
-    esp_rom_gpio_pad_select_gpio(SOUND_GPIO);
-    gpio_set_direction(SOUND_GPIO, GPIO_MODE_INPUT);
+    esp_rom_gpio_pad_select_gpio(BUZZER_PIN);
+    gpio_reset_pin(BUZZER_PIN);
+    gpio_set_direction(BUZZER_PIN, GPIO_MODE_OUTPUT);
 }
 
-void configure_dht11(void)
+void configure_DHT11(void)
 {
-    esp_rom_gpio_pad_select_gpio(BUZZER_GPIO);
-    gpio_set_direction(BUZZER_GPIO, GPIO_MODE_OUTPUT);
+    esp_rom_gpio_pad_select_gpio(DHT11_PIN);
+    gpio_set_direction(DHT11_PIN, GPIO_MODE_OUTPUT);
 }
 
 void configure_LED(void)

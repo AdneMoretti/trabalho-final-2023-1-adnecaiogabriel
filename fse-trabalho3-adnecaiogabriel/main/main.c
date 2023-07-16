@@ -96,11 +96,14 @@
 #include "esp_http_client.h"
 #include "esp_log.h"
 #include "freertos/semphr.h"
-
+#include "gpio_setup.h"
+#include "buzzer.h"
+#include "freertos/task.h"
+#include "dht11.h"
 #include "wifi.h"
 #include "mqtt.h"
-// #include "json_parser.h"
-// #include "gpio_setup.h"
+#include "json_parser.h"
+#include "gpio_setup.h"
 #include <math.h>
 #define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
 
@@ -156,6 +159,7 @@ float limit_decimal(float x, int decimal_places){
 
 void app_main(void)
 {    
+<<<<<<< Updated upstream
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
       ESP_ERROR_CHECK(nvs_flash_erase());
@@ -204,4 +208,28 @@ void app_main(void)
         printf("ESP not identified");
       }
     }
+=======
+    printf("Olá hello!");
+    fflush(stdout);
+    
+    // configure_BUZZER();
+    // printf("estou aqui");
+    // // change_state_buzzer(1); 
+    // loop();
+    // change_state_buzzer(0);
+  // configure_DHT11();
+  // DHT11_init(4);
+  // while(1) {
+  //   printf("Temperature is %d \n", DHT11_read().temperature);
+  //   printf("Humidity is %d\n", DHT11_read().humidity);
+  //   printf("Status code is %d\n", DHT11_read().status);
+  //   vTaskDelay(3000 / portTICK_PERIOD_MS);
+  // }
+    // connectionWifiSemaphore = xSemaphoreCreateBinary();
+    // connectionMQTTSemaphore = xSemaphoreCreateBinary();
+    // reconnectionWifiSemaphore = xSemaphoreCreateBinary();
+    // wifi_start()
+    // xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
+    // xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
+>>>>>>> Stashed changes
 }

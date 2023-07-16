@@ -1,0 +1,26 @@
+{
+    "project_name":       "bootloader",
+    "project_path":       "/home/adne/esp/esp-idf/components/bootloader/subproject",
+    "build_dir":          "/home/adne/unb/7_semestre/fse/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/build/bootloader",
+    "config_file":        "/home/adne/unb/7_semestre/fse/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/sdkconfig",
+    "config_defaults":    "",
+    "bootloader_elf":     "",
+    "app_elf":            "bootloader.elf",
+    "app_bin":            "bootloader.bin",
+    "build_type":         "flash_app",
+    "git_revision":       "v5.1-rc2",
+    "target":             "esp32",
+    "rev":                "0",
+    "min_rev":            "0",
+    "max_rev":            "399",
+    "phy_data_partition": "",
+    "monitor_baud" :      "115200",
+    "monitor_toolprefix": "xtensa-esp32-elf-",
+    "config_environment" : {
+        "COMPONENT_KCONFIGS" : "/home/adne/esp/esp-idf/components/efuse/Kconfig;/home/adne/esp/esp-idf/components/esp_common/Kconfig;/home/adne/esp/esp-idf/components/esp_hw_support/Kconfig;/home/adne/esp/esp-idf/components/esp_system/Kconfig;/home/adne/esp/esp-idf/components/freertos/Kconfig;/home/adne/esp/esp-idf/components/hal/Kconfig;/home/adne/esp/esp-idf/components/log/Kconfig;/home/adne/esp/esp-idf/components/newlib/Kconfig;/home/adne/esp/esp-idf/components/soc/Kconfig;/home/adne/esp/esp-idf/components/spi_flash/Kconfig",
+        "COMPONENT_KCONFIGS_PROJBUILD" : "/home/adne/esp/esp-idf/components/bootloader/Kconfig.projbuild;/home/adne/esp/esp-idf/components/esp_app_format/Kconfig.projbuild;/home/adne/esp/esp-idf/components/esp_rom/Kconfig.projbuild;/home/adne/esp/esp-idf/components/esptool_py/Kconfig.projbuild;/home/adne/esp/esp-idf/components/partition_table/Kconfig.projbuild"
+    },
+    "build_components" : [ "bootloader", "bootloader_support", "efuse", "esp_app_format", "esp_common", "esp_hw_support", "esp_rom", "esp_system", "esptool_py", "freertos", "hal", "log", "main", "micro-ecc", "newlib", "partition_table", "soc", "spi_flash", "xtensa", "" ],
+    "build_component_paths" : [ "/home/adne/esp/esp-idf/components/bootloader", "/home/adne/esp/esp-idf/components/bootloader_support", "/home/adne/esp/esp-idf/components/efuse", "/home/adne/esp/esp-idf/components/esp_app_format", "/home/adne/esp/esp-idf/components/esp_common", "/home/adne/esp/esp-idf/components/esp_hw_support", "/home/adne/esp/esp-idf/components/esp_rom", "/home/adne/esp/esp-idf/components/esp_system", "/home/adne/esp/esp-idf/components/esptool_py", "/home/adne/esp/esp-idf/components/freertos", "/home/adne/esp/esp-idf/components/hal", "/home/adne/esp/esp-idf/components/log", "/home/adne/esp/esp-idf/components/bootloader/subproject/main", "/home/adne/esp/esp-idf/components/bootloader/subproject/components/micro-ecc", "/home/adne/esp/esp-idf/components/newlib", "/home/adne/esp/esp-idf/components/partition_table", "/home/adne/esp/esp-idf/components/soc", "/home/adne/esp/esp-idf/components/spi_flash", "/home/adne/esp/esp-idf/components/xtensa", "" ],
+    "debug_prefix_map_gdbinit": ""
+}

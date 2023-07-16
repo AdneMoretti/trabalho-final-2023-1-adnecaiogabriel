@@ -339,8 +339,13 @@ CONFIG_PARTITION_TABLE_MD5=y
 #
 # Configuração do Wifi
 #
+<<<<<<< Updated upstream
 CONFIG_ESP_WIFI_SSID="Cristiane"
 CONFIG_ESP_WIFI_PASSWORD="cristiane1"
+=======
+CONFIG_ESP_WIFI_SSID="ssid"
+CONFIG_ESP_WIFI_PASSWORD="minha_senha"
+>>>>>>> Stashed changes
 CONFIG_ESP_MAXIMUM_RETRY=5
 # end of Configuração do Wifi
 
@@ -355,10 +360,17 @@ CONFIG_ESP_MODE=1
 #
 # Seleção de Configuração de Placa
 #
+<<<<<<< Updated upstream
 # CONFIG_ESP0 is not set
 # CONFIG_ESP1 is not set
 CONFIG_ESP2=y
 CONFIG_ESP_CONFIG_NUMBER=2
+=======
+CONFIG_ESP0=y
+# CONFIG_ESP1 is not set
+# CONFIG_ESP2 is not set
+CONFIG_ESP_CONFIG_NUMBER=0
+>>>>>>> Stashed changes
 # end of Seleção de Configuração de Placa
 
 #
