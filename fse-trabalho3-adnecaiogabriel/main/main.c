@@ -99,16 +99,10 @@
 
 #include "wifi.h"
 #include "mqtt.h"
-#include "dht11.h"
 // #include "json_parser.h"
-#include "gpio.h"
-// #include "battery_mode.h"
-#include "gpio_wakeup.h"
-// #include "magnetic_module.h"
+// #include "gpio_setup.h"
 #include <math.h>
 #define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
-
-#define TEMP_GPIO 19
 
 #define ESP_MODE CONFIG_ESP_MODE
 #define BATTERY_MODE 0
@@ -144,11 +138,11 @@ void handle_server_communication(void * params)
     {
        float temp = 20.0 + (float)rand()/(float)(RAND_MAX/10.0);
        
-      //  sprintf(mensagem, "{\"temperature\": %f}", temp);
-      //  mqtt_envia_mensagem("v1/devices/me/telemetry", mensagem);
+       sprintf(mensagem, "{\"temperature\": %f}", temp);
+       mqtt_envia_mensagem("v1/devices/me/telemetry", mensagem);
 
-      //  sprintf(jsonAtributos, "{\"quantidade de pinos\": 5, \n\"umidade\": 20}");
-      //  mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
+       sprintf(jsonAtributos, "{\"quantidade de pinos\": 5, \n\"umidade\": 20}");
+       mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
 
        vTaskDelay(3000 / portTICK_PERIOD_MS);
     }
@@ -161,60 +155,12 @@ float limit_decimal(float x, int decimal_places){
 }
 
 void app_main(void)
-{
-    // printf("ESP NUMBER %d\n", ESP_CONFIG_NUMBER);
-    // configure_buzzer();
-    // Inicializa o NVS
-    // esp_err_t ret = nvs_flash_init();
-    // if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-    //   ESP_ERROR_CHECK(nvs_flash_erase());
-    //   ret = nvs_flash_init();
-    // }
-    // ESP_ERROR_CHECK(ret);
-    
+{    
     connectionWifiSemaphore = xSemaphoreCreateBinary();
     connectionMQTTSemaphore = xSemaphoreCreateBinary();
     reconnectionWifiSemaphore = xSemaphoreCreateBinary();
     wifi_start();
-    printf("ESP MODE %d\n", ESP_MODE);
 
     xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
     xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
-
-    if(ESP_MODE == BATTERY_MODE) {
-      
-      if(ESP_CONFIG_NUMBER == 2) {
-        //wake_up_with_gpio(16);
-        while(1) {
-          vTaskDelay(1000 / portTICK_PERIOD_MS);
-          ESP_LOGI("Modo Funcionamento", "Bateria");
-        //   readShockSensorBatery();
-          light_sleep_task();
-          xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
-          xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
-        }
-      } else {
-        printf("ESP not identified");
-      }
-
-    }
-    else if(ESP_MODE == ENERGY_MODE) {
-      ESP_LOGI("Modo Funcionamento", "ENERGIA");
-      
-      if(ESP_CONFIG_NUMBER == 0) {
-        configure_buzzer();
-        xTaskCreate(&read_temperature_humidity_sensor, "Leitura de Temperatura e Umidade", 4096, NULL, 1, NULL);
-        xTaskCreate(&check_magnetic, "Leitura de Sensor Magnético", 4096, NULL, 1, NULL);
-      } else if(ESP_CONFIG_NUMBER == 1) {
-        // setup_analog_sensors();
-        xTaskCreate(&check_luminosity, "Leitura de Luminosidade", 4096, NULL, 1, NULL);
-        xTaskCreate(&check_heartbeat, "Leitura de Batimentos", 4096, NULL, 1, NULL);
-      } else if(ESP_CONFIG_NUMBER == 2) {
-        setup_analog_sensors();
-        xTaskCreate(&readShockSensor, "Leitura Sensor de Choque", 4096, NULL, 1, NULL);
-        xTaskCreate(&check_flame, "Leitura Sensor de Chama", 4096, NULL, 1, NULL);
-      } else {
-        printf("ESP not identified");
-      }
-    }
 }

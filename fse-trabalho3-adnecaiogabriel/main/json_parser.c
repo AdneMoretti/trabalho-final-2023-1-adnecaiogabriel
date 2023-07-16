@@ -1,34 +1,27 @@
-// #include "cJSON.h"
-// #include "cJSON.c"
-// #include "mqtt.h"
-// #include "esp_log.h"
-// #include "esp_event.h"
-// #include "mqtt_client.h"
-// #include "heartbeat_module.h"
+#include "cJSON.h"
+#include "cJSON.c"
+#include "mqtt.h"
+#include "esp_log.h"
+#include "esp_event.h"
+#include "mqtt_client.h"
 
-// #define TAG "MQTT"
+void set_attributes_states(char *key, int value, int topic_id)
+{
+}
 
-// void send_humidity_telemetry(void *temperature, void *humidity)
-// {
+void mqtt_event_data_parser(char *data, char *topic)
+{
+    cJSON *json = cJSON_Parse(data);
+    if (json == NULL)
+        return;
 
-// }
-
-// void mqtt_event_data_parser(char *data, char *topic)
-// {
-
-// }
-
-// void send_board_magnetic_attribute(int *magnetic_status)
-// {
-
-// }
-
-// void send_board_led_attribute(int *led_status)
-// {
-//     cJSON *root = cJSON_CreateObject();
-
-//     float ls = *(int *)led_status;
-    
-//     cJSON_AddItemToObject(root, "led da placa", cJSON_CreateNumber(ls));
-//     mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
-// }
+    int rst;
+    int topic_id;
+    rst = sscanf(topic, "v1/devices/me/rpc/request/%d",
+      &topic_id);
+    char *key = cJSON_GetObjectItem(json, "method")->valuestring;
+    int value = cJSON_GetObjectItem(json, "params")->valueint;
+    if(strstr(key, "set") != NULL){
+        set_attributes_states(key, value, topic_id);
+    }
+}
