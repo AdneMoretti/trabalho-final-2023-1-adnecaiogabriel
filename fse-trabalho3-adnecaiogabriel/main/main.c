@@ -191,16 +191,11 @@ void app_main(void)
       ESP_LOGI("Modo Funcionamento", "ENERGIA");
       
       if(ESP_CONFIG_NUMBER == 0) {
-        // configure_buzzer();
-        // xTaskCreate(&read_temperature_humidity_sensor, "Leitura de Temperatura e Umidade", 4096, NULL, 1, NULL);
-        // xTaskCreate(&check_magnetic, "Leitura de Sensor Magnético", 4096, NULL, 1, NULL);
       } else if(ESP_CONFIG_NUMBER == 1) {
-        // setup_analog_sensors();
-        // xTaskCreate(&check_luminosity, "Leitura de Luminosidade", 4096, NULL, 1, NULL);
-        // xTaskCreate(&check_heartbeat, "Leitura de Batimentos", 4096, NULL, 1, NULL);
+
       } else if(ESP_CONFIG_NUMBER == 2) {
         configure_SOUND();
-        xTaskCreate(&check_sound, "Leitura Sensor de Choque", 4096, NULL, 1, NULL);
+        xTaskCreate(&check_sound, "Leitura Sensor de Som", 4096, NULL, 1, NULL);
       } else {
         printf("ESP not identified");
       }

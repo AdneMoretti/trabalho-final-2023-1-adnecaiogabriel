@@ -6,6 +6,7 @@
     "files.associations": {
         "err.h": "c",
         "adc_module.h": "c",
-        "json_parser.h": "c"
+        "json_parser.h": "c",
+        "mqtt_client.h": "c"
     }
 }

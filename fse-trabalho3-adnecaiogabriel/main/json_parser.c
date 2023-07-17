@@ -26,6 +26,8 @@ void mqtt_event_data_parser(char *data, char *topic)
     if(strstr(key, "set") != NULL){
         set_attributes_states(key, value, topic_id);
     }
+
+    printf("State");
 }
 
 void send_sound_alert(int *sound)
@@ -40,7 +42,7 @@ void send_sound_alert(int *sound)
 
     double sound_toDouble = *(int *)sound;
     
-    cJSON_AddItemToObject(root, "alertaFogo", cJSON_CreateNumber(sound_toDouble));
+    cJSON_AddItemToObject(root, "Alerta de Som", cJSON_CreateNumber(sound_toDouble));
     mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
 }
 
@@ -56,6 +58,6 @@ void send_sound_telemetry(int *sound)
 
     double sound_toDouble = *(int *)sound;
     
-    cJSON_AddItemToObject(root, "sensorSom", cJSON_CreateNumber(sound_toDouble));
+    cJSON_AddItemToObject(root, "Sensor de Som", cJSON_CreateNumber(sound_toDouble));
     mqtt_envia_mensagem("v1/devices/me/telemetry", cJSON_Print(root));
 }
