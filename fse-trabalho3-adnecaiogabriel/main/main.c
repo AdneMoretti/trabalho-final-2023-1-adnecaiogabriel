@@ -114,6 +114,8 @@
 SemaphoreHandle_t connectionWifiSemaphore;
 SemaphoreHandle_t connectionMQTTSemaphore;
 SemaphoreHandle_t reconnectionWifiSemaphore;
+struct dht11_reading data;
+
 
 float temp_media = 0;
 float humidity_media = 0;
@@ -134,12 +136,15 @@ void wifi_connected(void * params)
 void handle_server_communication(void * params)
 {
   char mensagem[50];
-  char jsonAtributos[200];
+  // char jsonAtributos[200];
   if(xSemaphoreTake(connectionMQTTSemaphore, portMAX_DELAY))
   {
     while(true)
-    {
-       float temp = 20.0 + (float)rand()/(float)(RAND_MAX/10.0);
+    { 
+        data = DHT11_read();
+        printf("%f", data.temperature);
+        sprintf(mensagem, "{\"temperature\": %f}", data.temperature);
+        mqtt_envia_mensagem("v1/devices/me/telemetry", mensagem);
        
     //    sprintf(mensagem, "{\"temperature\": %f}", temp);
     //    mqtt_envia_mensagem("v1/devices/me/telemetry", mensagem);
@@ -159,7 +164,6 @@ float limit_decimal(float x, int decimal_places){
 
 void app_main(void)
 {    
-<<<<<<< Updated upstream
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
       ESP_ERROR_CHECK(nvs_flash_erase());
@@ -192,44 +196,22 @@ void app_main(void)
     }
     else if(ESP_MODE == ENERGY_MODE) {
       ESP_LOGI("Modo Funcionamento", "ENERGIA");
-      
       if(ESP_CONFIG_NUMBER == 0) {
-        configure_buzzer();
-        xTaskCreate(&read_temperature_humidity_sensor, "Leitura de Temperatura e Umidade", 4096, NULL, 1, NULL);
-        xTaskCreate(&check_magnetic, "Leitura de Sensor Magnético", 4096, NULL, 1, NULL);
+        DHT11_init(4);
+        xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
+        // xTaskCreate(&read_temperature_humidity_sensor, "Leitura de Temperatura e Umidade", 4096, NULL, 1, NULL);
+        // xTaskCreate(&check_magnetic, "Leitura de Sensor Magnético", 4096, NULL, 1, NULL);
       } else if(ESP_CONFIG_NUMBER == 1) {
-        setup_analog_sensors();
-        xTaskCreate(&check_luminosity, "Leitura de Luminosidade", 4096, NULL, 1, NULL);
-        xTaskCreate(&check_heartbeat, "Leitura de Batimentos", 4096, NULL, 1, NULL);
+        // setup_analog_sensors();
+        printf("second");
+        // xTaskCreate(&check_luminosity, "Leitura de Luminosidade", 4096, NULL, 1, NULL);
+        // xTaskCreate(&check_heartbeat, "Leitura de Batimentos", 4096, NULL, 1, NULL);
       } else if(ESP_CONFIG_NUMBER == 2) {
-        config_LED();
-        xTaskCreate(&check_sound, "Leitura Sensor de Choque", 4096, NULL, 1, NULL);
+        printf("terceirio");
+        // config_LED();
+        // xTaskCreate(&check_sound, "Leitura Sensor de Choque", 4096, NULL, 1, NULL);
       } else {
         printf("ESP not identified");
       }
     }
-=======
-    printf("Olá hello!");
-    fflush(stdout);
-    
-    // configure_BUZZER();
-    // printf("estou aqui");
-    // // change_state_buzzer(1); 
-    // loop();
-    // change_state_buzzer(0);
-  // configure_DHT11();
-  // DHT11_init(4);
-  // while(1) {
-  //   printf("Temperature is %d \n", DHT11_read().temperature);
-  //   printf("Humidity is %d\n", DHT11_read().humidity);
-  //   printf("Status code is %d\n", DHT11_read().status);
-  //   vTaskDelay(3000 / portTICK_PERIOD_MS);
-  // }
-    // connectionWifiSemaphore = xSemaphoreCreateBinary();
-    // connectionMQTTSemaphore = xSemaphoreCreateBinary();
-    // reconnectionWifiSemaphore = xSemaphoreCreateBinary();
-    // wifi_start()
-    // xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
-    // xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
->>>>>>> Stashed changes
 }
