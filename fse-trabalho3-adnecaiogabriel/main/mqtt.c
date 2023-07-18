@@ -25,7 +25,8 @@
 #define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
 
 extern SemaphoreHandle_t connectionMQTTSemaphore;
-esp_mqtt_client_handle_t client;
+esp_mqtt_client_handle_t client_dash;
+esp_mqtt_client_handle_t client_esp;
 
 static void log_error_if_nonzero(const char *message, int error_code)
 {
@@ -38,13 +39,13 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
 {
     ESP_LOGD(TAG, "Event dispatched from event loop base=%s, event_id=%d", base, (int) event_id);
     esp_mqtt_event_handle_t event = event_data;
-    esp_mqtt_client_handle_t client = event->client;
+    esp_mqtt_client_handle_t client_dash = event->client;
     int msg_id;
     switch ((esp_mqtt_event_id_t)event_id) {
         case MQTT_EVENT_CONNECTED:
             ESP_LOGI(TAG, "MQTT_EVENT_CONNECTED");
             xSemaphoreGive(connectionMQTTSemaphore);
-            int msg_id = esp_mqtt_client_subscribe(client, "v1/devices/me/rpc/request/+", 0);
+            int msg_id = esp_mqtt_client_subscribe(client_dash, "v1/devices/me/rpc/request/+", 0);
             break;
         case MQTT_EVENT_DISCONNECTED:
             ESP_LOGI(TAG, "MQTT_EVENT_DISCONNECTED");
@@ -100,19 +101,19 @@ void mqtt_start()
     esp_mqtt_client_config_t mqtt_config = {
           .broker.address.uri = "mqtt://164.41.98.25",
           .credentials.username = token_dash
-      };
-    client = esp_mqtt_client_init(&mqtt_config);
-    esp_mqtt_client_register_event(client, ESP_EVENT_ANY_ID, mqtt_event_handler, NULL);
-    esp_mqtt_client_start(client);
+    };
+    client_dash = esp_mqtt_client_init(&mqtt_config);
+    esp_mqtt_client_register_event(client_dash, ESP_EVENT_ANY_ID, mqtt_event_handler, NULL);
+    esp_mqtt_client_start(client_dash);
 }
 
 void mqtt_envia_mensagem(char * topico, char * mensagem)
 {
-    int message_id = esp_mqtt_client_publish(client, topico, mensagem, 0, 1, 0);
+    int message_id = esp_mqtt_client_publish(client_dash, topico, mensagem, 0, 1, 0);
     ESP_LOGI(TAG, "Mensagem enviada, ID: %d %s", message_id, topico);
 }
 
 void mqtt_stop(){
-    esp_err_t err = esp_mqtt_client_stop(client);
+    esp_err_t err = esp_mqtt_client_stop(client_dash);
     ESP_ERROR_CHECK(err);
 }

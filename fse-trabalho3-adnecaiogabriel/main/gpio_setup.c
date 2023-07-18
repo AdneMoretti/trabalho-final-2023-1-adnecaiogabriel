@@ -6,7 +6,7 @@
 #define SOUND_GPIO 19
 #define BUZZER_PIN 2
 #define DHT11_PIN 4
-#define HALL_PIN 22
+#define HALL_PIN 15
 
 void configure_BUZZER(void)
 {
