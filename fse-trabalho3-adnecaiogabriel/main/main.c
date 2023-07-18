@@ -6,10 +6,16 @@
 #include "esp_http_client.h"
 #include "esp_log.h"
 #include "freertos/semphr.h"
+#include "dht11.h"
+#include "hall.h"
 
 #include "wifi.h"
 #include "mqtt.h"
+<<<<<<< HEAD
 #include "sound_sensor.h"
+=======
+// #include "sound_sensor.h"
+>>>>>>> 8d538a7ede48e9cc3f5f8277fb08253f0a0a5e6d
 #include "json_parser.h"
 #include "gpio_setup.h"
 #include <math.h>
@@ -65,6 +71,7 @@ float limit_decimal(float x, int decimal_places){
   return roundf(x*power)/power;
 }
 
+
 void app_main(void)
 {    
     esp_err_t ret = nvs_flash_init();
@@ -101,13 +108,27 @@ void app_main(void)
       ESP_LOGI("Modo Funcionamento", "ENERGIA");
       
       if(ESP_CONFIG_NUMBER == 0) {
+<<<<<<< HEAD
       } else if(ESP_CONFIG_NUMBER == 1) {
 
       } else if(ESP_CONFIG_NUMBER == 2) {
         configure_SOUND();
         xTaskCreate(&check_sound, "Leitura Sensor de Som", 4096, NULL, 1, NULL);
+=======
+        DHT11_init(4);
+        configure_HALL();
+        xTaskCreate(&verifica_magnetic, "Verificando existencia de campo magnetico", 4096, NULL, 1, NULL);
+      } else if(ESP_CONFIG_NUMBER == 1) {
+        
+      // } else if(ESP_CONFIG_NUMBER == 2) {
+      //   configure_SOUND();
+      //   xTaskCreate(&check_sound, "Leitura Sensor de Som", 4096, NULL, 1, NULL);
+>>>>>>> 8d538a7ede48e9cc3f5f8277fb08253f0a0a5e6d
       } else {
         printf("ESP not identified");
       }
     }
 }
+
+
+

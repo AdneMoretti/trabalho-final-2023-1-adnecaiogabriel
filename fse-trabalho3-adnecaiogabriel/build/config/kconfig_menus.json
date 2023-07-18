@@ -4466,7 +4466,7 @@
                         "id": "ESP0",
                         "name": "ESP0",
                         "range": null,
-                        "title": "Buzzer + DHT + toque",
+                        "title": "Sensor de Hall + DHT",
                         "type": "bool"
                     },
                     {
@@ -4476,7 +4476,7 @@
                         "id": "ESP1",
                         "name": "ESP1",
                         "range": null,
-                        "title": "Sensor magn\u00e9tico + umidade + buzzer",
+                        "title": "Buzzer + Sensor de toque",
                         "type": "bool"
                     },
                     {

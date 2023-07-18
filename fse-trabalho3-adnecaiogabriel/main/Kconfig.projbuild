@@ -45,9 +45,9 @@ menu "Seleção de Configuração de Placa"
       default ESP0
 
       config ESP0
-          bool "Buzzer + DHT + toque"
+          bool "Sensor de Hall + DHT"
       config ESP1
-          bool "Sensor magnético + umidade + buzzer"
+          bool "Buzzer + Sensor de toque"
       config ESP2
           bool "Sensor de som + LED"
   endchoice

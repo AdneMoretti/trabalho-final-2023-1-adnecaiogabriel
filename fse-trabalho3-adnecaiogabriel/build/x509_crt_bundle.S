@@ -1,4 +1,4 @@
-/* * Data converted from /home/gabriel/github-classroom/FGA-FSE/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/build/esp-idf/mbedtls/x509_crt_bundle
+/* * Data converted from /home/adne/unb/7_semestre/fse/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/build/esp-idf/mbedtls/x509_crt_bundle
  */
 .data
 .section .rodata.embedded

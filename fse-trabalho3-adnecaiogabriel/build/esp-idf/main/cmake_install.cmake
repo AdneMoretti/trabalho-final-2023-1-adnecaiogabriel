@@ -1,4 +1,4 @@
-# Install script for directory: /home/gabriel/github-classroom/FGA-FSE/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/main
+# Install script for directory: /home/adne/unb/7_semestre/fse/trabalho-final-2023-1-adnecaiogabriel/fse-trabalho3-adnecaiogabriel/main
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,6 +34,6 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/home/gabriel/.espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/bin/xtensa-esp32-elf-objdump")
+  set(CMAKE_OBJDUMP "/home/adne/.espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/bin/xtensa-esp32-elf-objdump")
 endif()
 

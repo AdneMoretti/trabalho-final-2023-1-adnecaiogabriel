@@ -93,9 +93,9 @@
     "EFUSE_MAX_BLK_LEN": 192,
     "EFUSE_VIRTUAL": false,
     "ENERGY": true,
-    "ESP0": false,
+    "ESP0": true,
     "ESP1": false,
-    "ESP2": true,
+    "ESP2": false,
     "ESP32_DISABLE_BASIC_ROM_CONSOLE": false,
     "ESP32_REV_MAX_FULL": 399,
     "ESP32_REV_MIN": 0,
@@ -151,7 +151,7 @@
     "ESP_BROWNOUT_DET_LVL_SEL_5": false,
     "ESP_BROWNOUT_DET_LVL_SEL_6": false,
     "ESP_BROWNOUT_DET_LVL_SEL_7": false,
-    "ESP_CONFIG_NUMBER": 2,
+    "ESP_CONFIG_NUMBER": 0,
     "ESP_CONSOLE_MULTIPLE_UART": true,
     "ESP_CONSOLE_NONE": false,
     "ESP_CONSOLE_UART": true,
@@ -291,7 +291,11 @@
     "ESP_WIFI_MGMT_SBUF_NUM": 32,
     "ESP_WIFI_NAN_ENABLE": false,
     "ESP_WIFI_NVS_ENABLED": true,
+<<<<<<< HEAD
     "ESP_WIFI_PASSWORD": "bielmoreti1",
+=======
+    "ESP_WIFI_PASSWORD": "Crocop1984@",
+>>>>>>> 8d538a7ede48e9cc3f5f8277fb08253f0a0a5e6d
     "ESP_WIFI_RX_BA_WIN": 6,
     "ESP_WIFI_RX_IRAM_OPT": true,
     "ESP_WIFI_SLP_BEACON_LOST_OPT": false,
@@ -299,7 +303,11 @@
     "ESP_WIFI_SOFTAP_BEACON_MAX_LEN": 752,
     "ESP_WIFI_SOFTAP_SAE_SUPPORT": true,
     "ESP_WIFI_SOFTAP_SUPPORT": true,
+<<<<<<< HEAD
     "ESP_WIFI_SSID": "Gabriel M.",
+=======
+    "ESP_WIFI_SSID": "Morettis",
+>>>>>>> 8d538a7ede48e9cc3f5f8277fb08253f0a0a5e6d
     "ESP_WIFI_STATIC_RX_BUFFER_NUM": 10,
     "ESP_WIFI_STATIC_TX_BUFFER": false,
     "ESP_WIFI_STA_DISCONNECTED_PM_ENABLE": true,
