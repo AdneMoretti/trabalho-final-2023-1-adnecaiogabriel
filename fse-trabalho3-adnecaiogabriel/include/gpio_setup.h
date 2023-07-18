@@ -4,5 +4,6 @@
 void configure_BUZZER();
 void configure_LED(char * topico, char * mensagem);
 void configure_DHT11();
+void configure_HALL();
 
 #endif

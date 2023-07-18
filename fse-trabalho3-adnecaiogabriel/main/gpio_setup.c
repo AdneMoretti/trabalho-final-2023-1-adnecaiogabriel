@@ -6,6 +6,7 @@
 #define SOUND_GPIO 19
 #define BUZZER_PIN 2
 #define DHT11_PIN 4
+#define HALL_PIN 15
 
 void configure_BUZZER(void)
 {
@@ -18,6 +19,12 @@ void configure_DHT11(void)
 {
     esp_rom_gpio_pad_select_gpio(DHT11_PIN);
     gpio_set_direction(DHT11_PIN, GPIO_MODE_OUTPUT);
+}
+
+void configure_HALL(void)
+{
+    esp_rom_gpio_pad_select_gpio(HALL_PIN);
+    gpio_set_direction(HALL_PIN, GPIO_MODE_INPUT);
 }
 
 void configure_LED(void)
