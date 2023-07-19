@@ -1,7 +1,6 @@
 {
     "idf.adapterTargetName": "esp32",
     "idf.flashType": "UART",
-<<<<<<< HEAD
     "idf.port": "/dev/ttyUSB0",
     "files.associations": {
         "err.h": "c",
@@ -10,7 +9,3 @@
         "mqtt_client.h": "c"
     }
 }
-=======
-    "idf.port": "/dev/ttyUSB0"
-}
->>>>>>> 8d538a7ede48e9cc3f5f8277fb08253f0a0a5e6d

@@ -11,11 +11,8 @@
 
 #include "wifi.h"
 #include "mqtt.h"
-<<<<<<< HEAD
+#include "mosquitto.h"
 #include "sound_sensor.h"
-=======
-// #include "sound_sensor.h"
->>>>>>> 8d538a7ede48e9cc3f5f8277fb08253f0a0a5e6d
 #include "json_parser.h"
 #include "gpio_setup.h"
 #include <math.h>
@@ -41,6 +38,7 @@ void wifi_connected(void * params)
     {
       // Processamento Internet
       mqtt_start();
+      mosquitto_start();
     }
   }
 }
@@ -94,7 +92,6 @@ void app_main(void)
         while(1) {
           vTaskDelay(1000 / portTICK_PERIOD_MS);
           ESP_LOGI("Modo Funcionamento", "Bateria");
-        //   readShockSensorBatery();
         //   light_sleep_task();
           xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
           xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
@@ -108,22 +105,16 @@ void app_main(void)
       ESP_LOGI("Modo Funcionamento", "ENERGIA");
       
       if(ESP_CONFIG_NUMBER == 0) {
-<<<<<<< HEAD
-      } else if(ESP_CONFIG_NUMBER == 1) {
-
-      } else if(ESP_CONFIG_NUMBER == 2) {
-        configure_SOUND();
-        xTaskCreate(&check_sound, "Leitura Sensor de Som", 4096, NULL, 1, NULL);
-=======
+        printf("ESP0");
         DHT11_init(4);
         configure_HALL();
         xTaskCreate(&verifica_magnetic, "Verificando existencia de campo magnetico", 4096, NULL, 1, NULL);
       } else if(ESP_CONFIG_NUMBER == 1) {
-        
-      // } else if(ESP_CONFIG_NUMBER == 2) {
-      //   configure_SOUND();
-      //   xTaskCreate(&check_sound, "Leitura Sensor de Som", 4096, NULL, 1, NULL);
->>>>>>> 8d538a7ede48e9cc3f5f8277fb08253f0a0a5e6d
+        printf("ESP1");
+      } else if(ESP_CONFIG_NUMBER == 2) {
+        printf("ESP2");
+        configure_SOUND();
+        xTaskCreate(&check_sound, "Leitura Sensor de Som", 4096, NULL, 1, NULL);
       } else {
         printf("ESP not identified");
       }

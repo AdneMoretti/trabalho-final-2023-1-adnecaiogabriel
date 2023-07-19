@@ -9,7 +9,7 @@
 #define TAG "sound"
 #define SOUND_GPIO 19
 
-volatile bool soundAlert = false;
+volatile bool soundAlert = true;
 
 void check_sound() {
    vTaskDelay(2000 / portTICK_PERIOD_MS);
@@ -19,17 +19,12 @@ void check_sound() {
     ESP_LOGI(TAG, "sound: %d", sound);
     
     if (sound == 1) {
-      soundAlert = true;
       send_sound_alert(&soundAlert);
+      vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
     
     // sound = sound/4;
     send_sound_telemetry(&sound);
     vTaskDelay(500 / portTICK_PERIOD_MS);
   }
-}
-
-void turn_off_alarm() {
-    soundAlert = false;
-    send_sound_alert(&soundAlert);
 }

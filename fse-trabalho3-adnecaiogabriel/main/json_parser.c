@@ -4,6 +4,7 @@
 #include "esp_log.h"
 #include "esp_event.h"
 #include "mqtt_client.h"
+#include "mosquitto.h"
 
 #define TAG "MQTT"
 
@@ -43,7 +44,7 @@ void send_sound_alert(int *sound)
     double sound_toDouble = *(int *)sound;
     
     cJSON_AddItemToObject(root, "Alerta de Som", cJSON_CreateNumber(sound_toDouble));
-    mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
+    mosquitto_envia_mensagem("FSEACG/alarme", cJSON_Print(root));
 }
 
 void send_sound_telemetry(int *sound)

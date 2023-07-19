@@ -21,7 +21,6 @@
 #include "json_parser.h"
 #include "mosquitto.h"
 
-#include "security_sistem.h"
 #define FLAG_ALARME 0 
 #define TAG "MOSQUITTO"
 
@@ -30,15 +29,15 @@ esp_mqtt_client_handle_t client;
 
 #include "driver/gpio.h"
 #define BUZZER_GPIO 2
-#define SENSOR 15
+#define TOUCH_SENSOR 15
 
 void security(int ALARME)
 {
   // Configuração dos pinos dos LEDs 
   esp_rom_gpio_pad_select_gpio(BUZZER_GPIO);   
-  esp_rom_gpio_pad_select_gpio(SENSOR);
+  esp_rom_gpio_pad_select_gpio(TOUCH_SENSOR);
   // Configura os pinos dos LEDs como Output
-  gpio_set_direction(SENSOR, GPIO_MODE_INPUT);
+  gpio_set_direction(TOUCH_SENSOR, GPIO_MODE_INPUT);
   gpio_set_direction(BUZZER_GPIO, GPIO_MODE_OUTPUT);  
 
   // Configuração do pino do Botão
@@ -48,12 +47,12 @@ void security(int ALARME)
     ALARME=ALARME;
   // Testa o Botão utilizando polling
   while (1){
-    if(gpio_get_level(SENSOR) == 1){ //SE A LEITURA DO SENSOR FOR IGUAL A HIGH, FAZ
+    if(gpio_get_level(TOUCH_SENSOR) == 1){ //SE A LEITURA DO SENSOR FOR IGUAL A HIGH, FAZ
       printf("Desligou alarme");
       gpio_set_level(BUZZER_GPIO, 0); //desliga o alarme
       vTaskDelay(100 / portTICK_PERIOD_MS);
       break;
-    }else if(gpio_get_level(SENSOR) == 0){ //SE A LEITURA DO SENSOR FOR IGUAL A LOW, FAZ
+    }else if(gpio_get_level(TOUCH_SENSOR) == 0){ //SE A LEITURA DO SENSOR FOR IGUAL A LOW, FAZ
       printf("Ligado o Alarme");
       gpio_set_level(BUZZER_GPIO, 1); //ACENDE O alarme
       vTaskDelay(100 / portTICK_PERIOD_MS);

@@ -42,3 +42,9 @@ void configure_LED(void)
     gpio_set_level(LED_GREEN_GPIO, 1);
     gpio_set_level(LED_BLUE_GPIO, 1);
 }
+
+void configure_SOUND(void)
+{
+    esp_rom_gpio_pad_select_gpio(SOUND_GPIO);
+    gpio_set_direction(SOUND_GPIO, GPIO_MODE_INPUT);
+}

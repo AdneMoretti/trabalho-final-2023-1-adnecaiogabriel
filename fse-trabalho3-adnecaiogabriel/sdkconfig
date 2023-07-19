@@ -339,13 +339,8 @@ CONFIG_PARTITION_TABLE_MD5=y
 #
 # Configuração do Wifi
 #
-<<<<<<< HEAD
-CONFIG_ESP_WIFI_SSID="Gabriel M."
-CONFIG_ESP_WIFI_PASSWORD="bielmoreti1"
-=======
 CONFIG_ESP_WIFI_SSID="Morettis"
 CONFIG_ESP_WIFI_PASSWORD="Crocop1984@"
->>>>>>> 8d538a7ede48e9cc3f5f8277fb08253f0a0a5e6d
 CONFIG_ESP_MAXIMUM_RETRY=5
 # end of Configuração do Wifi
 
@@ -360,10 +355,10 @@ CONFIG_ESP_MODE=1
 #
 # Seleção de Configuração de Placa
 #
-CONFIG_ESP0=y
+# CONFIG_ESP0 is not set
 # CONFIG_ESP1 is not set
-# CONFIG_ESP2 is not set
-CONFIG_ESP_CONFIG_NUMBER=0
+CONFIG_ESP2=y
+CONFIG_ESP_CONFIG_NUMBER=2
 # end of Seleção de Configuração de Placa
 
 #

@@ -1,10 +1,10 @@
 #include <stdio.h>
-<<<<<<< HEAD
 #include <stdlib.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "driver/adc.h"
 #include "driver/ledc.h"
+#include "esp_err.h"
 
 static ledc_channel_config_t ledc_channel;
 
@@ -38,11 +38,6 @@ void led_control(int brightness) {
     ledc_set_duty(ledc_channel.speed_mode, ledc_channel.channel, brightness);
     ledc_update_duty(ledc_channel.speed_mode, ledc_channel.channel);
 }
-=======
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "driver/ledc.h"
-#include "esp_err.h"
 
 #define LED_1 2
 
@@ -98,4 +93,3 @@ void app_main()
 
 
 }
->>>>>>> 8d538a7ede48e9cc3f5f8277fb08253f0a0a5e6d
