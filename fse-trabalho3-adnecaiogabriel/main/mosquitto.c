@@ -31,20 +31,19 @@ esp_mqtt_client_handle_t client;
 #define BUZZER_GPIO 2
 #define TOUCH_SENSOR 15
 
-void security(int ALARME)
+void security(char *ALARM_TAG)
 {
   // Configuração dos pinos dos LEDs 
   esp_rom_gpio_pad_select_gpio(BUZZER_GPIO);   
   esp_rom_gpio_pad_select_gpio(TOUCH_SENSOR);
   // Configura os pinos dos LEDs como Output
   gpio_set_direction(TOUCH_SENSOR, GPIO_MODE_INPUT);
-  gpio_set_direction(BUZZER_GPIO, GPIO_MODE_OUTPUT);  
+  gpio_set_direction(BUZZER_GPIO, GPIO_MODE_OUTPUT);
 
   // Configuração do pino do Botão
   // Configura o pino do Botão como Entrada
   // Configura o resistor de Pulldown para o botão (por padrão a entrada estará em Zero)  
   gpio_set_level(BUZZER_GPIO,0);
-    ALARME=ALARME;
   // Testa o Botão utilizando polling
   while (1){
     if(gpio_get_level(TOUCH_SENSOR) == 1){ //SE A LEITURA DO SENSOR FOR IGUAL A HIGH, FAZ
@@ -54,6 +53,9 @@ void security(int ALARME)
       break;
     }else if(gpio_get_level(TOUCH_SENSOR) == 0){ //SE A LEITURA DO SENSOR FOR IGUAL A LOW, FAZ
       printf("Ligado o Alarme");
+      // SE FOR A ESP DE LED E SOM:
+      flashLEDs(ALARM_TAG);
+      // SE FOR A ESP DE BUZZER E TOQUE
       gpio_set_level(BUZZER_GPIO, 1); //ACENDE O alarme
       vTaskDelay(100 / portTICK_PERIOD_MS);
     }
@@ -68,7 +70,7 @@ static void log_error_if_nonzero(const char *message, int error_code)
 
 static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
 {
-     ESP_LOGD(TAG, "Event dispatched from event loop base=%s, event_id=%d", base, (int) event_id);
+    ESP_LOGD(TAG, "Event dispatched from event loop base=%s, event_id=%d", base, (int) event_id);
     esp_mqtt_event_handle_t event = event_data;
     esp_mqtt_client_handle_t client = event->client;
     int msg_id;
@@ -90,7 +92,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
 
         case MQTT_EVENT_SUBSCRIBED:
             ESP_LOGI(TAG, "MQTT_EVENT_SUBSCRIBED, msg_id=%d", event->msg_id);
-            mosquitto_envia_mensagem("FSEACG/alarme", "1");
+            // mosquitto_envia_mensagem("FSEACG/alarme", "1");
             // mosquitto_envia_mensagem("FSEACG/alarme", "0");
 
 
@@ -108,37 +110,9 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
             printf("DATA=%.*s\r\n", event->data_len, event->data);
             char* comp="1";
-            printf("%s",event->data);
             if(event->data[0]=='1'){
-                security(1);
-            }else{
-                security(0);
+                security(event->data[1]);
             }
-            // transformString(event->topic);
-            // printf("%s",event->topic);
-            // char jsonAtributos[200];
-            // sprintf(jsonAtributos, "{\"temperatura\": 123, \n\"umidade\": 20}");
-            // mqtt_envia_mensagem(event->topic,jsonAtributos);
-            // mqtt_envia_mensagem("v1/devices/me/attributes/request/1","{\"clientKeys\":\"temperatura\"}");
-
-            // int response_id = esp_mqtt_client_subscribe(client,"v1/devices/me/attributes/response/+",0);
-            // char response[200];
-            // sprintf(response, "v1/devices/me/attributes/request/%d", response_id);
-            // mqtt_envia_mensagem(response, '{"clientKeys":"temperatura"}');
-            // int num =find_integers(event->topic);
-            // char local[50];
-            // char str[50];
-            // sprintf(str,"%d",num);
-            // strcpy(local, "v1/devices/me/rpc/response/");
-            // strcat(local,str);
-            // printf("%s",local);
-            // mqtt_envia_mensagem(local,"{ledValor: 1}");
-            // mqtt_envia_mensagem(strcat("v1/devices/me/rpc/response/",num),"34");
-            // char* openingBrace = strchr(receivedString, '{');
-            // char requestId[100];
-            // strcpy(requestId, event->topic + strlen("v1/devices/me/rpc/request/"));
-            // esp_mqtt_client_publish(client, "v1/devices/me/rpc/response/", requestId, strlen(requestId), 0, false);
-            // mqtt_envia_mensagem()
             break;
         case MQTT_EVENT_ERROR:
             ESP_LOGI(TAG, "MQTT_EVENT_ERROR");

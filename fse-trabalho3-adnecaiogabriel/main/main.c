@@ -71,7 +71,7 @@ float limit_decimal(float x, int decimal_places){
 
 
 void app_main(void)
-{    
+{
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
       ESP_ERROR_CHECK(nvs_flash_erase());
@@ -105,14 +105,12 @@ void app_main(void)
       ESP_LOGI("Modo Funcionamento", "ENERGIA");
       
       if(ESP_CONFIG_NUMBER == 0) {
-        printf("ESP0");
         DHT11_init(4);
         configure_HALL();
         xTaskCreate(&verifica_magnetic, "Verificando existencia de campo magnetico", 4096, NULL, 1, NULL);
       } else if(ESP_CONFIG_NUMBER == 1) {
-        printf("ESP1");
+        
       } else if(ESP_CONFIG_NUMBER == 2) {
-        printf("ESP2");
         configure_SOUND();
         xTaskCreate(&check_sound, "Leitura Sensor de Som", 4096, NULL, 1, NULL);
       } else {

@@ -7,6 +7,7 @@
 #include "mosquitto.h"
 
 #define TAG "MQTT"
+#define SOUND_ALARM "SOUND_ALARM"
 
 void set_attributes_states(char *key, int value, int topic_id)
 {
@@ -31,7 +32,7 @@ void mqtt_event_data_parser(char *data, char *topic)
     printf("State");
 }
 
-void send_sound_alert(int *sound)
+void send_sound(int *sound)
 {
 
     cJSON *root = cJSON_CreateObject();
@@ -40,25 +41,22 @@ void send_sound_alert(int *sound)
         ESP_LOGE(TAG, "Não foi possível criar o JSON");
         return;
     }
-
-    double sound_toDouble = *(int *)sound;
     
-    cJSON_AddItemToObject(root, "Alerta de Som", cJSON_CreateNumber(sound_toDouble));
-    mosquitto_envia_mensagem("FSEACG/alarme", cJSON_Print(root));
-}
+    double sound_toDouble = *(int *)sound;
 
-void send_sound_telemetry(int *sound)
-{
+    if (sound_toDouble == 1) {
+        cJSON *alarm = cJSON_CreateObject();
+        if (alarm == NULL)
+        {
+            ESP_LOGE(TAG, "Não foi possível criar o JSON");
+            return;
+        }
 
-    cJSON *root = cJSON_CreateObject();
-    if (root == NULL)
-    {
-        ESP_LOGE(TAG, "Não foi possível criar o JSON");
-        return;
+        cJSON_AddNumberToObject(alarm, "Alerta de Som", 1);
+        cJSON_AddStringToObject(alarm, "TAG", SOUND_ALARM);
+        mosquitto_envia_mensagem("FSEACG/alarme", cJSON_Print(alarm));
     }
 
-    double sound_toDouble = *(int *)sound;
-    
-    cJSON_AddItemToObject(root, "Sensor de Som", cJSON_CreateNumber(sound_toDouble));
+    cJSON_AddNumberToObject(root, "sound", sound_toDouble);
     mqtt_envia_mensagem("v1/devices/me/telemetry", cJSON_Print(root));
 }
