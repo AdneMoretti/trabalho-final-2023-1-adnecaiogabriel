@@ -15,6 +15,7 @@
 #include "json_parser.h"
 #include "gpio_setup.h"
 #include <math.h>
+#include "global.h"
 #define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
 
 #define ESP_MODE CONFIG_ESP_MODE
@@ -28,7 +29,7 @@ SemaphoreHandle_t reconnectionWifiSemaphore;
 float temp_media = 0;
 float humidity_media = 0;
 int cont_temp = 0;
-
+ALARME=1
 void wifi_connected(void * params)
 {
   while(true)
@@ -51,11 +52,11 @@ void handle_server_communication(void * params)
     {
        float temp = 20.0 + (float)rand()/(float)(RAND_MAX/10.0);
        
-    //    sprintf(mensagem, "{\"temperature\": %f}", temp);
-    //    mqtt_envia_mensagem("v1/devices/me/telemetry", mensagem);
+      //  sprintf(mensagem, "{\"temperature\": %f}", temp);
+      //  mqtt_envia_mensagem("v1/devices/me/telemetry", mensagem);
 
-    //    sprintf(jsonAtributos, "{\"quantidade de pinos\": 5, \n\"umidade\": 20}");
-    //    mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
+      //  sprintf(jsonAtributos, "{\"quantidade de pinos\": 5, \n\"umidade\": 20}");
+      //  mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
 
        vTaskDelay(3000 / portTICK_PERIOD_MS);
     }

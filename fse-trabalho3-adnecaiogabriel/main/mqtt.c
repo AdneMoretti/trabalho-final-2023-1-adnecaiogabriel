@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <ctype.h>
+#include <stdlib.h>
 #include <string.h>
 #include "esp_system.h"
 #include "esp_event.h"
@@ -34,6 +36,21 @@ static void log_error_if_nonzero(const char *message, int error_code)
         ESP_LOGE(TAG, "Last error %s: 0x%x", message, error_code);
     }
 }
+void transformString(char* input) {
+    // Find the position of the opening brace '{'
+    char* brace = strchr(input, '{');
+    if (brace != NULL) {
+        *brace = '\0'; // Truncate the string at the position of '{'
+    }
+    
+    // Find the position of the last '/'
+    char* lastSlash = strrchr(input, '/');
+    if (lastSlash != NULL) {
+        char requestId[100];
+        strcpy(requestId, lastSlash + 1);
+        sprintf(input, "v1/devices/me/rpc/response/%s", requestId);
+    }
+}
 
 static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
 {
@@ -45,7 +62,10 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
         case MQTT_EVENT_CONNECTED:
             ESP_LOGI(TAG, "MQTT_EVENT_CONNECTED");
             xSemaphoreGive(connectionMQTTSemaphore);
-            int msg_id = esp_mqtt_client_subscribe(client_dash, "v1/devices/me/rpc/request/+", 0);
+            msg_id = esp_mqtt_client_subscribe(client_dash, "v1/devices/me/rpc/request/+", 0);
+            ESP_LOGI(TAG, "sent suscribe succesfull, msg_id=%d", msg_id);
+            msg_id = esp_mqtt_client_subscribe(client_dash,"v1/devices/me/attributes/response/+",0);
+            ESP_LOGI(TAG, "sent suscribe succesfull, msg_id=%d", msg_id);
             break;
         case MQTT_EVENT_DISCONNECTED:
             ESP_LOGI(TAG, "MQTT_EVENT_DISCONNECTED");
@@ -63,14 +83,16 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
         case MQTT_EVENT_DATA:
             ESP_LOGI(TAG, "MQTT_EVENT_DATA");
             
-            // mqtt_event_data_parser(event->data, event->topic);
+            mqtt_event_data_parser(event->data, event->topic);
             printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
             printf("DATA=%.*s\r\n", event->data_len, event->data);
             
-            // char requestId[100];
-            // strcpy(requestId, event->topic + strlen("v1/devices/me/rpc/request/"));
-            // esp_mqtt_client_publish(client, "v1/devices/me/rpc/response/", requestId, strlen(requestId), 0, false);
-
+            transformString(event->topic);
+            printf("%s",event->topic);
+            char jsonAtributos[200];
+            sprintf(jsonAtributos, "{\"temperatura\": 15}");
+            printf("%s",jsonAtributos);
+            mqtt_envia_mensagem(event->topic,jsonAtributos);
             break;
         case MQTT_EVENT_ERROR:
             ESP_LOGI(TAG, "MQTT_EVENT_ERROR");
@@ -79,7 +101,6 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
                 log_error_if_nonzero("reported from tls stack", event->error_handle->esp_tls_stack_err);
                 log_error_if_nonzero("captured as transport's socket errno",  event->error_handle->esp_transport_sock_errno);
                 ESP_LOGI(TAG, "Last errno string (%s)", strerror(event->error_handle->esp_transport_sock_errno));
-
             }
             break;
         default:
@@ -94,7 +115,7 @@ void mqtt_start()
     if (ESP_CONFIG_NUMBER == 0){
       token_dash = "XgQhdKfAdnzug96MmPvQ";
     } else if (ESP_CONFIG_NUMBER == 1) {
-      token_dash = "";
+      token_dash = "1MklVxb6sYtA5Fw145yX";
     } else if (ESP_CONFIG_NUMBER == 2) {
       token_dash = "ZodDWt0knISJC2CLkRir";
     };
