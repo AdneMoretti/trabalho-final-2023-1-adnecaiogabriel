@@ -29,15 +29,16 @@ SemaphoreHandle_t reconnectionWifiSemaphore;
 float temp_media = 0;
 float humidity_media = 0;
 int cont_temp = 0;
-ALARME=1
+int ALARME=0;
+
 void wifi_connected(void * params)
 {
   while(true)
   {
     if(xSemaphoreTake(connectionWifiSemaphore, portMAX_DELAY))
     {
-      // Processamento Internet
-      mosquitto_start();
+      // mosquitto_start();
+      mqtt_start();
     }
   }
 }

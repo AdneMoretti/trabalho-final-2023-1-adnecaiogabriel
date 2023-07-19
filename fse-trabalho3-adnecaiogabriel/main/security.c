@@ -5,7 +5,6 @@
 #include "freertos/queue.h"
 #include "esp_log.h"
 #include "driver/gpio.h"
-#include "security_sistem.h"
 #include "global.h"
 #include "security.h"
 #define BUZZER_GPIO 2
@@ -32,10 +31,12 @@ void security(int dado)
       gpio_set_level(BUZZER_GPIO, 0); //desliga o alarme
       vTaskDelay(100 / portTICK_PERIOD_MS);
       ALARME=0;
+      break;
     }else if(gpio_get_level(SENSOR) == 0){ //SE A LEITURA DO SENSOR FOR IGUAL A LOW, FAZ
       printf("Ligado o Alarme");
       gpio_set_level(BUZZER_GPIO, 1); //ACENDE O alarme
       vTaskDelay(100 / portTICK_PERIOD_MS);
+      ALARME=1;
     }
   }
 }

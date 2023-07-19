@@ -19,7 +19,7 @@
 
 #include "esp_log.h"
 #include "mqtt_client.h"
-
+#include "global.h"
 #include "mqtt.h"
 
 #define TAG "MQTT"
@@ -81,17 +81,17 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             break;
         case MQTT_EVENT_DATA:
             ESP_LOGI(TAG, "MQTT_EVENT_DATA");
-            
-            mqtt_event_data_parser(event->data, event->topic);
             printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
             printf("DATA=%.*s\r\n", event->data_len, event->data);
-            
+
+            if (ESP_CONFIG_NUMBER ==1){
             transformString(event->topic);
             printf("%s",event->topic);
             char jsonAtributos[200];
-            sprintf(jsonAtributos, "{\"temperatura\": 15}");
-            printf("%s",jsonAtributos);
+            sprintf(jsonAtributos, "{\"alarme\": "1"}");
+            printf("\n%s",jsonAtributos);
             mqtt_envia_mensagem(event->topic,jsonAtributos);
+            }
             break;
         case MQTT_EVENT_ERROR:
             ESP_LOGI(TAG, "MQTT_EVENT_ERROR");
