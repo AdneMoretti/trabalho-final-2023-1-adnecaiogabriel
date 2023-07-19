@@ -32,9 +32,22 @@ void mqtt_event_data_parser(char *data, char *topic)
     printf("State");
 }
 
+void mosquitto_event_data_parser(char *data)
+{
+    cJSON *json = cJSON_Parse(data);
+    if (json == NULL)
+        return;
+
+    int alerta = cJSON_GetObjectItem(json, "Alerta")->valueint;
+    char *tag = cJSON_GetObjectItem(json, "TAG")->valuestring;
+
+    if(alerta == 1){
+        security(tag);
+    }
+}
+
 void send_sound(int *sound)
 {
-
     cJSON *root = cJSON_CreateObject();
     if (root == NULL)
     {
@@ -52,7 +65,7 @@ void send_sound(int *sound)
             return;
         }
 
-        cJSON_AddNumberToObject(alarm, "Alerta de Som", 1);
+        cJSON_AddNumberToObject(alarm, "Alerta", 1);
         cJSON_AddStringToObject(alarm, "TAG", SOUND_ALARM);
         mosquitto_envia_mensagem("FSEACG/alarme", cJSON_Print(alarm));
     }

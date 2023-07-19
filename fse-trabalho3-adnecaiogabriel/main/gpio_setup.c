@@ -1,12 +1,24 @@
+#include <stdio.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "driver/ledc.h"
 #include "driver/gpio.h"
+#include "esp_err.h"
 
 #define LED_RED_GPIO 23
 #define LED_GREEN_GPIO 22
 #define LED_BLUE_GPIO 21
 #define SOUND_GPIO 19
-#define BUZZER_PIN 2
-#define DHT11_PIN 4
 #define HALL_PIN 15
+#define DHT11_PIN 4
+#define BUZZER_PIN 2
+#define BUTTON_GPIO 0
+
+void configure_ESP_BUTTON(void)
+{
+    esp_rom_gpio_pad_select_gpio(BUTTON_GPIO);
+    gpio_set_direction(BUTTON_GPIO, GPIO_MODE_INPUT);
+}
 
 void configure_BUZZER(void)
 {

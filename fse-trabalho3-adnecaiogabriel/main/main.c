@@ -7,6 +7,7 @@
 #include "esp_log.h"
 #include "freertos/semphr.h"
 #include "dht11.h"
+#include "LED.h"
 #include "hall.h"
 
 #include "wifi.h"
@@ -109,8 +110,9 @@ void app_main(void)
         configure_HALL();
         xTaskCreate(&verifica_magnetic, "Verificando existencia de campo magnetico", 4096, NULL, 1, NULL);
       } else if(ESP_CONFIG_NUMBER == 1) {
-        
+
       } else if(ESP_CONFIG_NUMBER == 2) {
+        configure_LED();
         configure_SOUND();
         xTaskCreate(&check_sound, "Leitura Sensor de Som", 4096, NULL, 1, NULL);
       } else {
