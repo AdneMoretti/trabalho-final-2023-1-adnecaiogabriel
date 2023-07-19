@@ -8,11 +8,10 @@
 #include "freertos/semphr.h"
 #include "dht11.h"
 #include "hall.h"
-
+#include "mosquitto.h"
 #include "wifi.h"
 #include "mqtt.h"
 // #include "sound_sensor.h"
-#include "json_parser.h"
 #include "gpio_setup.h"
 #include <math.h>
 #define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
@@ -25,6 +24,7 @@ SemaphoreHandle_t connectionWifiSemaphore;
 SemaphoreHandle_t connectionMQTTSemaphore;
 SemaphoreHandle_t reconnectionWifiSemaphore;
 
+
 float temp_media = 0;
 float humidity_media = 0;
 int cont_temp = 0;
@@ -36,7 +36,7 @@ void wifi_connected(void * params)
     if(xSemaphoreTake(connectionWifiSemaphore, portMAX_DELAY))
     {
       // Processamento Internet
-      mqtt_start();
+      mosquitto_start();
     }
   }
 }
@@ -82,40 +82,42 @@ void app_main(void)
     wifi_start();
 
     xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
-    xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
+    
+    // xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
 
-    if(ESP_MODE == BATTERY_MODE) {
-      if(ESP_CONFIG_NUMBER == 2) {
-        //wake_up_with_gpio(16);
-        while(1) {
-          vTaskDelay(1000 / portTICK_PERIOD_MS);
-          ESP_LOGI("Modo Funcionamento", "Bateria");
-        //   readShockSensorBatery();
-        //   light_sleep_task();
-          xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
-          xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
-        }
-      } else {
-        printf("ESP not identified");
-      }
+    // if(ESP_MODE == BATTERY_MODE) {
+    //   if(ESP_CONFIG_NUMBER == 2) {
+    //     //wake_up_with_gpio(16);
+    //     while(1) {
+    //       vTaskDelay(1000 / portTICK_PERIOD_MS);
+    //       ESP_LOGI("Modo Funcionamento", "Bateria");
+    //     //   readShockSensorBatery();
+    //     //   light_sleep_task();
+    //       xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
+    //       xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
+    //     }
+    //   } else {
+    //     printf("ESP not identified");
+    //   }
 
-    }
-    else if(ESP_MODE == ENERGY_MODE) {
-      ESP_LOGI("Modo Funcionamento", "ENERGIA");
+    // }
+    // else if(ESP_MODE == ENERGY_MODE) {
+    //   ESP_LOGI("Modo Funcionamento", "ENERGIA");
       
-      if(ESP_CONFIG_NUMBER == 0) {
-        DHT11_init(4);
-        configure_HALL();
-        xTaskCreate(&verifica_magnetic, "Verificando existencia de campo magnetico", 4096, NULL, 1, NULL);
-      } else if(ESP_CONFIG_NUMBER == 1) {
+    //   if(ESP_CONFIG_NUMBER == 0) {
+    //     // DHT11_init(4);
+    //     // configure_HALL();
+    //     xTaskCreate(&mosquitto_start, "Verificando existencia de campo magnetico", 4096, NULL, 1, NULL);
+
+    //   } else if(ESP_CONFIG_NUMBER == 1) {
         
-      // } else if(ESP_CONFIG_NUMBER == 2) {
-      //   configure_SOUND();
-      //   xTaskCreate(&check_sound, "Leitura Sensor de Som", 4096, NULL, 1, NULL);
-      } else {
-        printf("ESP not identified");
-      }
-    }
+    //   // } else if(ESP_CONFIG_NUMBER == 2) {
+    //   //   configure_SOUND();
+    //   //   xTaskCreate(&check_sound, "Leitura Sensor de Som", 4096, NULL, 1, NULL);
+    //   } else {
+    //     printf("ESP not identified");
+    //   }
+    // }
 }
 
 

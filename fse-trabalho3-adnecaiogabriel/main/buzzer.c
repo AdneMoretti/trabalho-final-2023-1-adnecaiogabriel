@@ -37,8 +37,7 @@ void playNote(Note note) {
 
 // Tarefa para tocar a música
 void playMusic(void *pvParameters) {
-
-	    // Configuração do canal LEDC para o buzzer
+    // Configuração do canal LEDC para o buzzer
     ledc_timer_config_t ledc_timer = {
         .duty_resolution = LEDC_TIMER_13_BIT,
         .freq_hz = BUZZER_PWM_FREQ,
@@ -63,15 +62,22 @@ void playMusic(void *pvParameters) {
         {NOTE_E1, 500},
         // ... adicione as outras notas e durações da música aqui
     };
-    
+
     size_t numNotes = sizeof(music) / sizeof(Note);
 
-    for (size_t i = 0; i < numNotes; i++) {
-        playNote(music[i]);
-    }
+    while (1) {
+        for (size_t i = 0; i < numNotes; i++) {
+            playNote(music[i]);
+        }
 
+        vTaskDelay(pdMS_TO_TICKS(1000)); // Pausa de 1 segundo antes de repetir a música
+    }
 }
 
+// void app_main() {
+//     // Criação da tarefa para tocar a música
+//     xTaskCreatePinnedToCore(playMusic, "playMusic", configMINIMAL_STACK_SIZE, NULL, 5, NULL, APP_CPU_NUM);
+// }
 
 
 // void app_main() {
