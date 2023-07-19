@@ -19,7 +19,6 @@
 
 #include "esp_log.h"
 #include "mqtt_client.h"
-#include "json_parser.h"
 
 #include "mqtt.h"
 

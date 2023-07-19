@@ -22,7 +22,7 @@ void verifica_magnetic(){
     while(1){
         magnetic = get_magnetic();
         if(!magnetic){
-            playMusic();
+            play_buzzer();
         }
         ESP_LOGI(TAG, "campo magnetico %d", magnetic);
         vTaskDelay(2000 / portTICK_PERIOD_MS);

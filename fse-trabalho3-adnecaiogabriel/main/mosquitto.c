@@ -17,6 +17,11 @@
 #include "esp_log.h"
 #include "mqtt_client.h"
 #include <ctype.h>
+#include "mosquitto.h"
+#include "cJSON.h"
+#include "security.h"
+
+#define FLAG_ALARME 0 
 #include "json_parser.h"
 #include "mqtt.h"
 #include "security.h"
@@ -38,7 +43,14 @@ void security(int dado)
   // Configura os pinos dos LEDs como Output
   gpio_set_direction(SENSOR, GPIO_MODE_INPUT);
   gpio_set_direction(BUZZER_GPIO, GPIO_MODE_OUTPUT);  
+cJSON* message;
 
+cJSON* create_message_json(float temperature, float humidity, int magnetic_signal) {
+    cJSON* functionJSON = cJSON_CreateObject();
+    cJSON_AddNumberToObject(functionJSON, "temperature", temperature);
+    cJSON_AddNumberToObject(functionJSON, "humidity", humidity);
+    cJSON_AddNumberToObject(functionJSON, "parameters", magnetic_signal);
+    return functionJSON;
   // Configuração do pino do Botão
   // Configura o pino do Botão como Entrada
   // Configura o resistor de Pulldown para o botão (por padrão a entrada estará em Zero)  
@@ -58,6 +70,35 @@ void security(int dado)
     }
   }
 }
+
+// void security(int ALARME)
+// {
+//   // Configuração dos pinos dos LEDs 
+//   esp_rom_gpio_pad_select_gpio(BUZZER_GPIO);   
+//   esp_rom_gpio_pad_select_gpio(SENSOR);
+//   // Configura os pinos dos LEDs como Output
+//   gpio_set_direction(SENSOR, GPIO_MODE_INPUT);
+//   gpio_set_direction(BUZZER_GPIO, GPIO_MODE_OUTPUT);  
+
+//   // Configuração do pino do Botão
+//   // Configura o pino do Botão como Entrada
+//   // Configura o resistor de Pulldown para o botão (por padrão a entrada estará em Zero)  
+//   gpio_set_level(BUZZER_GPIO,0);
+//     ALARME=ALARME;
+//   // Testa o Botão utilizando polling
+//   while (1){
+//     if(gpio_get_level(SENSOR) == 1){ //SE A LEITURA DO SENSOR FOR IGUAL A HIGH, FAZ
+//       printf("Desligou alarme");
+//       gpio_set_level(BUZZER_GPIO, 0); //desliga o alarme
+//       vTaskDelay(100 / portTICK_PERIOD_MS);
+//       break;
+//     }else if(gpio_get_level(SENSOR) == 0){ //SE A LEITURA DO SENSOR FOR IGUAL A LOW, FAZ
+//       printf("Ligado o Alarme");
+//       gpio_set_level(BUZZER_GPIO, 1); //ACENDE O alarme
+//       vTaskDelay(100 / portTICK_PERIOD_MS);
+//     }
+//   }
+// }
 static void log_error_if_nonzero(const char *message, int error_code)
 {
     if (error_code != 0) {
@@ -83,6 +124,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
 
         case MQTT_EVENT_SUBSCRIBED:
             ESP_LOGI(TAG, "MQTT_EVENT_SUBSCRIBED, msg_id=%d", event->msg_id);
+            // message = create_message_json(data.temperature, data.humidity, data.magnetic_signal);
             mosquitto_envia_mensagem("FSEACG/alarme", "1");
             break;
         case MQTT_EVENT_UNSUBSCRIBED:
