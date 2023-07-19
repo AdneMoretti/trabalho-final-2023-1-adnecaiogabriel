@@ -39,7 +39,7 @@ void flashLEDs(char *alarmTag) {
     r = 0;
     g = 1;
     b = 1;
-  } else if (strcmp(alarmTag, "HALL") == 0) {
+  } else if (strcmp(alarmTag, "MAGNETIC_ALARM") == 0) {
     // White light warning
     r = 0;
     g = 0;
