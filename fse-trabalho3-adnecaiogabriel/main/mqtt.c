@@ -88,7 +88,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             transformString(event->topic);
             printf("%s",event->topic);
             char jsonAtributos[200];
-            sprintf(jsonAtributos, "{\"alarme\": "1"}");
+            sprintf(jsonAtributos, "{\"alarme\": 1}");
             printf("\n%s",jsonAtributos);
             mqtt_envia_mensagem(event->topic,jsonAtributos);
             }

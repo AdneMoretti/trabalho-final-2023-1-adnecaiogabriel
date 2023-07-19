@@ -68,7 +68,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
         case MQTT_EVENT_SUBSCRIBED:
             ESP_LOGI(TAG, "MQTT_EVENT_SUBSCRIBED, msg_id=%d", event->msg_id);
             // message = create_message_json(data.temperature, data.humidity, data.magnetic_signal);
-            mosquitto_envia_mensagem("FSEACG/alarme", "1");
+            // mosquitto_envia_mensagem("FSEACG/alarme", "1");
             break;
         case MQTT_EVENT_UNSUBSCRIBED:
             ESP_LOGI(TAG, "MQTT_EVENT_UNSUBSCRIBED, msg_id=%d", event->msg_id);

@@ -16,7 +16,7 @@
 #include <math.h>
 #include "global.h"
 #define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
-
+#include "nvs.h"
 #define ESP_MODE CONFIG_ESP_MODE
 #define BATTERY_MODE 0
 #define ENERGY_MODE 1
@@ -29,7 +29,6 @@ SemaphoreHandle_t reconnectionWifiSemaphore;
 float temp_media = 0;
 float humidity_media = 0;
 int cont_temp = 0;
-int ALARME=0;
 
 void wifi_connected(void * params)
 {
@@ -37,7 +36,7 @@ void wifi_connected(void * params)
   {
     if(xSemaphoreTake(connectionWifiSemaphore, portMAX_DELAY))
     {
-      // mosquitto_start();
+      mosquitto_start();
       mqtt_start();
     }
   }
@@ -72,6 +71,7 @@ float limit_decimal(float x, int decimal_places){
 
 void app_main(void)
 {    
+    const char* alarme = "alarme";    
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
       ESP_ERROR_CHECK(nvs_flash_erase());
@@ -84,6 +84,24 @@ void app_main(void)
     wifi_start();
 
     xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
+    int32_t ALARME=le_valor_nvs(alarme);
+    ALARME=1;
+    grava_valor_nvs(ALARME,alarme);
+    int32_t caio=le_valor_nvs(alarme);
+    printf("%ld",caio);
+    // grava_valor_nvs(valor_lido,variable);
+    // esp_err_t ret = nvs_flash_init();
+    // if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+    //   ESP_ERROR_CHECK(nvs_flash_erase());
+    //   ret = nvs_flash_init();
+    // }
+    // ESP_ERROR_CHECK(ret);
+    // connectionWifiSemaphore = xSemaphoreCreateBinary();
+    // connectionMQTTSemaphore = xSemaphoreCreateBinary();
+    // reconnectionWifiSemaphore = xSemaphoreCreateBinary();
+    // wifi_start();
+
+    // xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
     
     // xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
 
