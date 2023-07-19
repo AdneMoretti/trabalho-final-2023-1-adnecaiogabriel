@@ -122,6 +122,7 @@ struct dht11_reading DHT11_read() {
         last_read.status = DHT11_OK;
         last_read.temperature = data[2];
         last_read.humidity = data[0];
+        printf("%d %d", last_read.temperature, last_read.humidity);
         return last_read;
     } else {
         return last_read = _crcError();
@@ -134,6 +135,6 @@ void check_temperature(){
         data = DHT11_read();
 
         send_temperature_telemetry(data.temperature, data.humidity);
-        vTaskDelay(1000/  portTICK_PERIOD_MS);
+        vTaskDelay(2000 /  portTICK_PERIOD_MS);
     }
 }

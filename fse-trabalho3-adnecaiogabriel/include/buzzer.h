@@ -12,5 +12,6 @@
 
 void playMusic();
 void play_buzzer();
+void setup();
 
 #endif /* MAIN_BUZZER_H_ */

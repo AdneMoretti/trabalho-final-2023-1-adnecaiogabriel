@@ -61,9 +61,11 @@ void send_temperature_telemetry(int temperature, int humidity)
     }
     temperature_d = (double) temperature;
     humidity_d = (double) humidity;
-    cJSON_AddNumberToObject(root, "temperature", temperature);
-    cJSON_AddNumberToObject(root, "humidity", humidity);    
+    cJSON_AddNumberToObject(root, "temperature", temperature_d);
+    cJSON_AddNumberToObject(root, "humidity", humidity_d);    
+    printf("%s", cJSON_Print(root));
     mqtt_envia_mensagem("v1/devices/me/telemetry", cJSON_Print(root));
+    mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
 }
 
 void send_magnetic_signal(int magnetic_signal)

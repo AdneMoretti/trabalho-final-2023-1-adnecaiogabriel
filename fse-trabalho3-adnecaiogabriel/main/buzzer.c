@@ -1,89 +1,16 @@
-#include <stdio.h>
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
-#include <driver/ledc.h>
+// #include <stdio.h>
+// #include "freertos/FreeRTOS.h"
+// #include "freertos/task.h"
+// #include "driver/ledc.h"
 
-// Definição das notas musicais
-#define NOTE_B0  31
-#define NOTE_C1  33
-#define NOTE_CS1 35
-#define NOTE_D1  37
-#define NOTE_DS1 39
-#define NOTE_E1  41
-// ... adicione as outras notas aqui
+// #define BUZZER_PIN  2
+// #define BUZZER_CHANNEL 0
+// #define BUZZER_PWM_FREQ 2000
+// #define BUZZER_RESOLUTION LEDC_TIMER_8_BIT
 
-// Frequência do PWM do buzzer
-#define BUZZER_PWM_FREQ 2000
-
-// Configuração do buzzer
-#define BUZZER_PIN  2
-#define BUZZER_CHANNEL LEDC_CHANNEL_0
-
-// Estrutura para armazenar as informações da nota
-typedef struct {
-    int note;
-    int duration;
-} Note;
-
-// Função para reproduzir uma nota no buzzer
-void playNote(Note note) {
-    ledc_set_duty(LEDC_HIGH_SPEED_MODE, BUZZER_CHANNEL, note.note);
-    ledc_update_duty(LEDC_HIGH_SPEED_MODE, BUZZER_CHANNEL);
-    vTaskDelay(pdMS_TO_TICKS(note.duration));
-    ledc_set_duty(LEDC_HIGH_SPEED_MODE, BUZZER_CHANNEL, 0);
-    ledc_update_duty(LEDC_HIGH_SPEED_MODE, BUZZER_CHANNEL);
-    vTaskDelay(pdMS_TO_TICKS(50)); // Pequena pausa entre as notas
-}
-
-// Tarefa para tocar a música
-void playMusic(void *pvParameters) {
-    // Configuração do canal LEDC para o buzzer
-    ledc_timer_config_t ledc_timer = {
-        .duty_resolution = LEDC_TIMER_13_BIT,
-        .freq_hz = BUZZER_PWM_FREQ,
-        .speed_mode = LEDC_HIGH_SPEED_MODE,
-        .timer_num = LEDC_TIMER_0
-    };
-    ledc_timer_config(&ledc_timer);
-
-    ledc_channel_config_t ledc_channel = {
-        .channel = BUZZER_CHANNEL,
-        .duty = 0,
-        .gpio_num = BUZZER_PIN,
-        .speed_mode = LEDC_HIGH_SPEED_MODE,
-        .timer_sel = LEDC_TIMER_0
-    };
-    ledc_channel_config(&ledc_channel);
-
-    // Aqui você pode definir a sua música
-    Note music[] = {
-        {NOTE_C1, 500},
-        {NOTE_D1, 500},
-        {NOTE_E1, 500},
-        // ... adicione as outras notas e durações da música aqui
-    };
-
-    size_t numNotes = sizeof(music) / sizeof(Note);
-
-    while (1) {
-        for (size_t i = 0; i < numNotes; i++) {
-            playNote(music[i]);
-        }
-
-        vTaskDelay(pdMS_TO_TICKS(1000)); // Pausa de 1 segundo antes de repetir a música
-    }
-}
-
-// void app_main() {
-//     // Criação da tarefa para tocar a música
-//     xTaskCreatePinnedToCore(playMusic, "playMusic", configMINIMAL_STACK_SIZE, NULL, 5, NULL, APP_CPU_NUM);
-// }
-
-
-// void app_main() {
-//     // Configuração do canal LEDC para o buzzer
+// void setup() {
 //     ledc_timer_config_t ledc_timer = {
-//         .duty_resolution = LEDC_TIMER_13_BIT,
+//         .duty_resolution = BUZZER_RESOLUTION,
 //         .freq_hz = BUZZER_PWM_FREQ,
 //         .speed_mode = LEDC_HIGH_SPEED_MODE,
 //         .timer_num = LEDC_TIMER_0
@@ -99,12 +26,71 @@ void playMusic(void *pvParameters) {
 //     };
 //     ledc_channel_config(&ledc_channel);
 
-//     // Criação da tarefa para tocar a música
-//     xTaskCreatePinnedToCore(playMusic, "playMusic", configMINIMAL_STACK_SIZE, NULL, 5, NULL, APP_CPU_NUM);
+//     // Start serial communication
+//     // Set the frequency to the initial value (2000 Hz)
+//     ledcWrite(BUZZER_CHANNEL, BUZZER_PWM_FREQ);
+// }
+
+// void playMusic() {
+//     // Vary the duty cycle
+//     for (int dutyCycle = 0; dutyCycle <= 255; dutyCycle += 10) {
+//         printf("Duty Cycle: %d\n", dutyCycle);
+//         ledcWrite(BUZZER_CHANNEL, dutyCycle);
+//         vTaskDelay(pdMS_TO_TICKS(1000));
+//     }
+
+//     // Fix the duty cycle to 125 (approximately 50%)
+//     ledcWrite(BUZZER_CHANNEL, 125);
+
+//     // Vary the frequency
+//     for (int freq = 255; freq < 10000; freq += 250) {
+//         printf("Frequency: %d\n", freq);
+//         ledcWriteTone(BUZZER_CHANNEL, freq);
+//         vTaskDelay(pdMS_TO_TICKS(1000));
+//     }
 // }
 
 
-void play_buzzer(){
-	gpio_set_level(BUZZER_PIN, 1);
+// // void app_main() {
+// //     // Inicialize o FreeRTOS e crie a tarefa para tocar a música
+// //     xTaskCreate(playMusic, "playMusic", configMINIMAL_STACK_SIZE * 3, NULL, 5, NULL);
 
-}
+// //     // Inicie o escalonador do FreeRTOS
+// //     vTaskStartScheduler();
+// // }
+
+
+// // void app_main() {
+// //     // Criação da tarefa para tocar a música
+// //     xTaskCreatePinnedToCore(playMusic, "playMusic", configMINIMAL_STACK_SIZE, NULL, 5, NULL, APP_CPU_NUM);
+// // }
+
+
+// // void app_main() {
+// //     // Configuração do canal LEDC para o buzzer
+// //     ledc_timer_config_t ledc_timer = {
+// //         .duty_resolution = LEDC_TIMER_13_BIT,
+// //         .freq_hz = BUZZER_PWM_FREQ,
+// //         .speed_mode = LEDC_HIGH_SPEED_MODE,
+// //         .timer_num = LEDC_TIMER_0
+// //     };
+// //     ledc_timer_config(&ledc_timer);
+
+// //     ledc_channel_config_t ledc_channel = {
+// //         .channel = BUZZER_CHANNEL,
+// //         .duty = 0,
+// //         .gpio_num = BUZZER_PIN,
+// //         .speed_mode = LEDC_HIGH_SPEED_MODE,
+// //         .timer_sel = LEDC_TIMER_0
+// //     };
+// //     ledc_channel_config(&ledc_channel);
+
+// //     // Criação da tarefa para tocar a música
+// //     xTaskCreatePinnedToCore(playMusic, "playMusic", configMINIMAL_STACK_SIZE, NULL, 5, NULL, APP_CPU_NUM);
+// // }
+
+
+// void play_buzzer(){
+// 	gpio_set_level(BUZZER_PIN, 1);
+
+// }

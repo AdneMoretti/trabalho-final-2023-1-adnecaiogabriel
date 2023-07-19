@@ -1,2 +1,2 @@
-idf_component_register(SRCS "dht11.c" "json_parser.c" "send_mqtt.c" "hall.c" "main.c" "cJSON.c" "mqtt.c" "LED.c" "sensor_som.c" "gpio_wakup.c" "buzzer.c" "gpio_setup.c" "wifi.c" "mosquitto.c"
+idf_component_register(SRCS "main.c" "buzz.c" "dht11.c" "json_parser.c" "send_mqtt.c" "hall.c" "cJSON.c" "mqtt.c" "LED.c" "sensor_som.c" "gpio_wakup.c" "buzzer.c" "gpio_setup.c" "wifi.c" "mosquitto.c"
                     INCLUDE_DIRS "")
