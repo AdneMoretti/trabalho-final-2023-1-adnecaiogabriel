@@ -27,7 +27,6 @@
 
 #define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
 
-#define FLAG_ALARME 0 
 #define TAG "MOSQUITTO"
 
 extern SemaphoreHandle_t connectionMQTTSemaphore;

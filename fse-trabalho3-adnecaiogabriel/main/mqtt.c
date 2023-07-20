@@ -7,6 +7,7 @@
 #include "esp_system.h"
 #include "esp_event.h"
 #include "esp_netif.h"
+#include "json_parser.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -19,6 +20,7 @@
 
 #include "esp_log.h"
 #include "mqtt_client.h"
+#include "cJSON.h"
 #include "global.h"
 #include "mqtt.h"
 
@@ -28,6 +30,9 @@
 extern SemaphoreHandle_t connectionMQTTSemaphore;
 esp_mqtt_client_handle_t client_dash;
 esp_mqtt_client_handle_t client_esp;
+
+char *method;
+int value;
 
 static void log_error_if_nonzero(const char *message, int error_code)
 {
@@ -80,17 +85,48 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             break;
         case MQTT_EVENT_DATA:
             ESP_LOGI(TAG, "MQTT_EVENT_DATA");
-            printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
-            printf("DATA=%.*s\r\n", event->data_len, event->data);
+            
+            // mqtt_event_data_parser(event->data, event->topic);
+            if(ESP_CONFIG_NUMBER == 0){
+                // printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
+                printf("DATA=%.*s\r\n", event->data_len, event->data);
+                ESP_LOGI(TAG, "MQTT_EVENT_DATA");
+
+                cJSON *json = cJSON_Parse(event->data);
+                if (json == NULL)
+                    return;
+
+                method = cJSON_GetObjectItem(json, "method")->valuestring;
+                if(strcmp(method, "setAlarm")==0){
+                    value = cJSON_GetObjectItem(json, "params")->valueint;
+                    send_dashboard_signal(value);
+                    vTaskDelay(1000 / portTICK_PERIOD_MS);
+
+                }
+
+                // transformString(event->topic);
+                // printf("%s",event->topic);
+                // char jsonAtributos[200];
+                // sprintf(jsonAtributos, "{\"magnetic_signal\": 0}");
+                // printf("\n%s",jsonAtributos);
+                // mqtt_envia_mensagem(event->topic,jsonAtributos);
+                
+            }
+
+            // void mosquitto_event_data_parser(char* data)
+            // char requestId[100];
+            // strcpy(requestId, event->topic + strlen("v1/devices/me/rpc/request/"));
+            // esp_mqtt_client_publish(client, "v1/devices/me/rpc/response/", requestId, strlen(requestId), 0, false);
+            // printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
+            // printf("DATA=%.*s\r\n", event->data_len, event->data);
 
             if (ESP_CONFIG_NUMBER ==1){
-            // transformString(event->topic);
-            // printf("%s",event->topic);
-            // char jsonAtributos[200];
-            // sprintf(jsonAtributos, "{\"alarme\": 1}");
-            // printf("\n%s",jsonAtributos);
-            // mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
-            // vTaskDelay(1000 / portTICK_PERIOD_MS);
+                transformString(event->topic);
+                printf("%s",event->topic);
+                char jsonAtributos[200];
+                sprintf(jsonAtributos, "{\"alarme\": 1}");
+                printf("\n%s",jsonAtributos);
+                mqtt_envia_mensagem(event->topic,jsonAtributos);
             }
             break;
         case MQTT_EVENT_ERROR:

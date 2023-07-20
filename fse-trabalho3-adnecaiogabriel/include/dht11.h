@@ -10,13 +10,14 @@ enum dht11_status {
 };
 
 struct dht11_reading {
-    float status;
-    float temperature;
-    float humidity;
+    int status;
+    int temperature;
+    int humidity;
 };
 
 void DHT11_init(gpio_num_t);
 
 struct dht11_reading DHT11_read();
+void check_temperature();
 
 #endif

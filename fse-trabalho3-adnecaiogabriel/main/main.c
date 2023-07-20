@@ -15,9 +15,12 @@
 #include "mosquitto.h"
 #include "sound_sensor.h"
 #include "json_parser.h"
+#include "buzzer.h"
+// #include "sound_sensor.h"
 #include "gpio_setup.h"
 #include <math.h>
 #include "global.h"
+#include "light_sleep.h"
 #define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
 #include "nvs.h"
 #define ESP_MODE CONFIG_ESP_MODE
@@ -51,13 +54,11 @@ void wifi_connected(void * params)
 void handle_server_communication(void)
 {
   char mensagem[50];
-  char jsonAtributos[200];
   if(xSemaphoreTake(connectionMQTTSemaphore, portMAX_DELAY))
   {
     while(true)
     {
-       const char* alarme = "alarme";   
-       int32_t ALARME=le_valor_nvs(alarme);
+       int32_t ALARME=le_valor_nvs("alarme");
        sprintf(mensagem, "{\"alarme\": %ld}", ALARME);
        mqtt_envia_mensagem("v1/devices/me/attributes", mensagem);
        vTaskDelay(3000 / portTICK_PERIOD_MS);
@@ -80,7 +81,7 @@ void app_main(void)
     int32_t ALARME=le_valor_nvs("alarme");
 
     if(ALARME==1){
-      xTaskCreate(&security, "Ativar segurança", 4096, (void*)le_valor_nvs("tag"), 1, NULL);
+      xTaskCreate(&security, "Ativar segurança", 4096, (void*)le_string_nvs("tag"), 1, NULL);
     }
     
     esp_err_t ret = nvs_flash_init();
@@ -99,19 +100,18 @@ void app_main(void)
     configure_ESP_BUTTON();
 
     if(ESP_MODE == BATTERY_MODE) {
-      if(ESP_CONFIG_NUMBER == 2) {
-        //wake_up_with_gpio(16);
-        while(1) {
-          vTaskDelay(1000 / portTICK_PERIOD_MS);
-          ESP_LOGI("Modo Funcionamento", "Bateria");
-        //   light_sleep_task();
-          xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
-          xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
-        }
-      } else {
+        if(ESP_CONFIG_NUMBER == 0) {
+        wake_up_with_hall();
+        configure_HALL();
+        printf("aqui");
+          while(1){
+            ESP_LOGI("Modo Funcionamento", "Bateria");
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+            light_sleep_task();
+          }
+    } else {
         printf("ESP not identified");
-      }
-
+    }
     }
     else if(ESP_MODE == ENERGY_MODE) {
       ESP_LOGI("Modo Funcionamento", "ENERGIA");
@@ -120,6 +120,7 @@ void app_main(void)
         DHT11_init(4);
         configure_HALL();
         xTaskCreate(&verifica_magnetic, "Verificando existencia de campo magnetico", 4096, NULL, 1, NULL);
+        xTaskCreate(&check_temperature, "Verificando existencia de campo magnetico", 4096, NULL, 1, NULL);
       } else if(ESP_CONFIG_NUMBER == 1) {
 
       } else if(ESP_CONFIG_NUMBER == 2) {
