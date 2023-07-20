@@ -42,13 +42,42 @@ cJSON* create_message_json(float temperature, float humidity, int magnetic_signa
     cJSON_AddNumberToObject(functionJSON, "parameters", magnetic_signal);
     return functionJSON;
 }
+
+void transformString(char* input) {
+    char* brace = strchr(input, '{');
+    if (brace != NULL) {
+        *brace = '\0'; // Truncate the string at the position of '{'
+    }
+
+    char* lastSlash = strrchr(input, '/');
+    if (lastSlash != NULL) {
+        char requestId[100];
+        strcpy(requestId, lastSlash + 1);
+        sprintf(input, "v1/devices/me/rpc/response/%s", requestId);
+    }
+}
+
+
 static void log_error_if_nonzero(const char *message, int error_code)
 {
     if (error_code != 0) {
         ESP_LOGE(TAG, "Last error %s: 0x%x", message, error_code);
     }
 }
+void mosquitto_event_data_parser(char* data)
+{
+    cJSON *json = cJSON_Parse(data);
+    if (json == NULL)
+        return;
 
+    int alerta = cJSON_GetObjectItem(json, "Alerta")->valueint;
+    printf("%d",alerta);
+    char *tag = cJSON_GetObjectItem(json, "TAG")->valuestring;
+    printf("%s",tag);
+    if(alerta == 1){
+                xTaskCreate(&security,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
+    }
+}
 static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
 {
      ESP_LOGD(TAG, "Event dispatched from event loop base=%s, event_id=%d", base, (int) event_id);
@@ -81,13 +110,13 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
             printf("DATA=%.*s\r\n", event->data_len, event->data);
             if (ESP_CONFIG_NUMBER==1){
-                char* comp="1";
-                printf("%s",event->data);
-                if(event->data[0]=='1'){
-                    security(1);
-                }else{
-                    security(0);
-                }
+                printf("oi");
+                mosquitto_event_data_parser(event->data);
+                // char* comp="1";
+                // printf("%s",event->data);
+                // if(event->data[0]=='1'){
+                // xTaskCreate(&security,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
+                // }
             }
             break;
         case MQTT_EVENT_ERROR:
