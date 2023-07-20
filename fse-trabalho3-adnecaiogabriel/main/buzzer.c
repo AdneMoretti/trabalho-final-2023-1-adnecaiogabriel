@@ -1,96 +1,89 @@
-// #include <stdio.h>
-// #include "freertos/FreeRTOS.h"
-// #include "freertos/task.h"
-// #include "driver/ledc.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "driver/ledc.h"
+#include "driver/gpio.h"
 
-// #define BUZZER_PIN  2
-// #define BUZZER_CHANNEL 0
-// #define BUZZER_PWM_FREQ 2000
-// #define BUZZER_RESOLUTION LEDC_TIMER_8_BIT
+static ledc_timer_config_t ledcTimer;
+static ledc_channel_config_t ledc_channel;
 
-// void setup() {
-//     ledc_timer_config_t ledc_timer = {
-//         .duty_resolution = BUZZER_RESOLUTION,
-//         .freq_hz = BUZZER_PWM_FREQ,
-//         .speed_mode = LEDC_HIGH_SPEED_MODE,
-//         .timer_num = LEDC_TIMER_0
-//     };
-//     ledc_timer_config(&ledc_timer);
 
-//     ledc_channel_config_t ledc_channel = {
-//         .channel = BUZZER_CHANNEL,
-//         .duty = 0,
-//         .gpio_num = BUZZER_PIN,
-//         .speed_mode = LEDC_HIGH_SPEED_MODE,
-//         .timer_sel = LEDC_TIMER_0
-//     };
+// void configure_buzzer_pwm(gpio_num_t pin) {
+//     // ledc_timer_config_t ledcTimer;
+
+//     ledcTimer.duty_resolution = LEDC_TIMER_8_BIT;
+//     ledcTimer.freq_hz = 5000;
+//     ledcTimer.speed_mode = LEDC_HIGH_SPEED_MODE;
+//     ledcTimer.timer_num = LEDC_TIMER_0;
+//     ledc_timer_config(&ledcTimer);
+
+//     ledc_channel.channel = LEDC_CHANNEL_0;
+//     ledc_channel.duty = 0;
+//     ledc_channel.gpio_num = pin;
+//     ledc_channel.speed_mode = LEDC_HIGH_SPEED_MODE;
+//     ledc_channel.hpoint = 0;
+//     ledc_channel.timer_sel = LEDC_TIMER_0;
 //     ledc_channel_config(&ledc_channel);
-
-//     // Start serial communication
-//     // Set the frequency to the initial value (2000 Hz)
-//     ledcWrite(BUZZER_CHANNEL, BUZZER_PWM_FREQ);
 // }
 
-// void playMusic() {
-//     // Vary the duty cycle
-//     for (int dutyCycle = 0; dutyCycle <= 255; dutyCycle += 10) {
-//         printf("Duty Cycle: %d\n", dutyCycle);
-//         ledcWrite(BUZZER_CHANNEL, dutyCycle);
-//         vTaskDelay(pdMS_TO_TICKS(1000));
+// void buzzer_control(uint32_t frequency) {
+//     // Ensure the frequency is within the range supported by the LEDC module
+//     if (frequency < 10) {
+//         frequency = 10;
+//     } else if (frequency > 10000) {
+//         frequency = 10000;
 //     }
 
-//     // Fix the duty cycle to 125 (approximately 50%)
-//     ledcWrite(BUZZER_CHANNEL, 125);
+//     // Calculate the duty cycle required to achieve the desired frequency
+//     uint32_t duty = (1 << ledcTimer.duty_resolution) / frequency / 2;
 
-//     // Vary the frequency
-//     for (int freq = 255; freq < 10000; freq += 250) {
-//         printf("Frequency: %d\n", freq);
-//         ledcWriteTone(BUZZER_CHANNEL, freq);
-//         vTaskDelay(pdMS_TO_TICKS(1000));
-//     }
+//     ledc_set_duty(ledcTimer.speed_mode, ledc_channel.channel, duty);
+//     ledc_update_duty(ledcTimer.speed_mode, ledc_channel.channel);
 // }
 
+// // Example usage
+// void buzzer() {
+//     gpio_set_level(2, 1);
+//     configure_buzzer_pwm(GPIO_NUM_2);
 
-// // void app_main() {
-// //     // Inicialize o FreeRTOS e crie a tarefa para tocar a música
-// //     xTaskCreate(playMusic, "playMusic", configMINIMAL_STACK_SIZE * 3, NULL, 5, NULL);
+//     // Change the buzzer frequency to 2000 Hz
+//     buzzer_control(2000);
+//     vTaskDelay(pdMS_TO_TICKS(2000)); // Wait for 2 seconds
 
-// //     // Inicie o escalonador do FreeRTOS
-// //     vTaskStartScheduler();
-// // }
+//     // Change the buzzer frequency to 5000 Hz
+//     buzzer_control(5000);
+//     vTaskDelay(pdMS_TO_TICKS(2000)); // Wait for 2 seconds
 
-
-// // void app_main() {
-// //     // Criação da tarefa para tocar a música
-// //     xTaskCreatePinnedToCore(playMusic, "playMusic", configMINIMAL_STACK_SIZE, NULL, 5, NULL, APP_CPU_NUM);
-// // }
-
-
-// // void app_main() {
-// //     // Configuração do canal LEDC para o buzzer
-// //     ledc_timer_config_t ledc_timer = {
-// //         .duty_resolution = LEDC_TIMER_13_BIT,
-// //         .freq_hz = BUZZER_PWM_FREQ,
-// //         .speed_mode = LEDC_HIGH_SPEED_MODE,
-// //         .timer_num = LEDC_TIMER_0
-// //     };
-// //     ledc_timer_config(&ledc_timer);
-
-// //     ledc_channel_config_t ledc_channel = {
-// //         .channel = BUZZER_CHANNEL,
-// //         .duty = 0,
-// //         .gpio_num = BUZZER_PIN,
-// //         .speed_mode = LEDC_HIGH_SPEED_MODE,
-// //         .timer_sel = LEDC_TIMER_0
-// //     };
-// //     ledc_channel_config(&ledc_channel);
-
-// //     // Criação da tarefa para tocar a música
-// //     xTaskCreatePinnedToCore(playMusic, "playMusic", configMINIMAL_STACK_SIZE, NULL, 5, NULL, APP_CPU_NUM);
-// // }
-
-
-// void play_buzzer(){
-// 	gpio_set_level(BUZZER_PIN, 1);
-
+//     // Change the buzzer frequency to 1000 Hz
+//     buzzer_control(1000);
+//     vTaskDelay(pdMS_TO_TICKS(2000)); // Wait for 2 seconds
 // }
+
+void buzzer(){
+    gpio_set_level(2, 1);
+    vTaskDelay(500 /  portTICK_PERIOD_MS);
+    gpio_set_level(2, 0);
+    vTaskDelay(1000 /  portTICK_PERIOD_MS);
+    gpio_set_level(2, 1);
+    vTaskDelay(500 /  portTICK_PERIOD_MS);
+    gpio_set_level(2, 0);
+    vTaskDelay(1000 /  portTICK_PERIOD_MS);
+    gpio_set_level(2, 1);
+    vTaskDelay(500 /  portTICK_PERIOD_MS);
+    gpio_set_level(2, 0);
+}
+
+void buzzer1(){
+    gpio_set_level(2, 1);
+    vTaskDelay(500 /  portTICK_PERIOD_MS);
+    gpio_set_level(2, 0);
+    vTaskDelay(1000 /  portTICK_PERIOD_MS);
+    gpio_set_level(2, 1);
+}
+
+void buzzer2(){
+    gpio_set_level(2, 1);
+    vTaskDelay(2000 /  portTICK_PERIOD_MS);
+    gpio_set_level(2, 0);
+}

@@ -3,6 +3,7 @@
     "idf.flashType": "UART",
     "idf.port": "/dev/ttyUSB0",
     "files.associations": {
-        "JSONPARSER.C": "cpp"
+        "JSONPARSER.C": "cpp",
+        "wifi.h": "c"
     }
 }

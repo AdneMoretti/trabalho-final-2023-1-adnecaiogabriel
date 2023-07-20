@@ -2,6 +2,7 @@
 #define HALL_H_
 
 void verifica_magnetic();
+void readHallBatery();
 
 #endif
 

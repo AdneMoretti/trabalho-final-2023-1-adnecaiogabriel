@@ -32,24 +32,6 @@ void mqtt_event_data_parser(char *data, char *topic)
     printf("State");
 }
 
-// void send_temperature_alarm(string TAG)
-// {
-
-//     cJSON root = cJSON_CreateObject();
-//     if (root == NULL)
-//     {
-//         ESP_LOGE(TAG, "Não foi possível criar o JSON");
-//         return;
-//     }
-
-//     double sound_toDouble =(int )sound;
-
-//     cJSON_AddNumberToObject(root, "Alerta", 1);
-//     cJSON_AddStringToObject(root, "TAG", TAG)
-
-//     mosquitto_envia_mensagem("FSEACG/alarme", cJSON_Print(root));
-// }
-
 void send_temperature_telemetry(int temperature, int humidity)
 {
     double temperature_d, humidity_d;
