@@ -7,6 +7,7 @@
 #include "mosquitto.h"
 
 #define TAG_MAGNETIC "MAGNETIC_ALARM"
+#define TAG_DASHBOARD "DASHBOARD_ALARM"
 #define TAG "MQTT"
 
 void set_attributes_states(char key, int value, int topic_id)
@@ -68,4 +69,13 @@ void send_magnetic_signal(int magnetic_signal)
 
     cJSON_AddNumberToObject(root, "magnetic_signal", magnetic_signal);  
     mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
+}
+
+void send_dashboard_signal(int signal)
+{
+    cJSON *alarm = cJSON_CreateObject();
+    cJSON_AddNumberToObject(alarm, "Alerta", signal);
+    cJSON_AddStringToObject(alarm, "TAG", TAG_DASHBOARD);
+    mosquitto_envia_mensagem("FSEACG/alarme", cJSON_Print(alarm));
+
 }

@@ -3,5 +3,6 @@
 
 void send_magnetic_signal();
 void send_temperature_telemetry();
+void send_dashboard_signal(int value);
 
 #endif
