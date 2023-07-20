@@ -49,23 +49,20 @@ void security(char *ALARM_TAG)
   // Configura o pino do Botão como Entrada
   // Configura o resistor de Pulldown para o botão (por padrão a entrada estará em Zero)
   // Testa o Botão utilizando polling
-  while (1){
-    if(gpio_get_level(TOUCH_SENSOR) == 0 && gpio_get_level(BUTTON_GPIO) == 0){ //SE A LEITURA DO SENSOR FOR IGUAL A HIGH, FAZ
-      vTaskDelay(100 / portTICK_PERIOD_MS);
-      break;
-    }else { //SE A LEITURA DO SENSOR FOR IGUAL A LOW, FAZ
-      ESP_LOGI(TAG, "Ligado o Alarme");
+  while (gpio_get_level(TOUCH_SENSOR) == 1 && gpio_get_level(BUTTON_GPIO) == 1){
+    ESP_LOGI(TAG, "%d", gpio_get_level(BUTTON_GPIO));
 
-      // SE FOR A ESP DE LED E SOM:
-      if(ESP_CONFIG_NUMBER == 2) {
+    ESP_LOGI(TAG, "Ligado o Alarme");
+
+    // SE FOR A ESP DE LED E SOM:
+    if(ESP_CONFIG_NUMBER == 2) {
         flashLEDs(ALARM_TAG);
-      }
-      // SE FOR A ESP DE BUZZER E TOQUE
-      if(ESP_CONFIG_NUMBER == 1) {
-        gpio_set_level(BUZZER_GPIO, 1);
-      }
-      vTaskDelay(100 / portTICK_PERIOD_MS);
     }
+    // SE FOR A ESP DE BUZZER E TOQUE
+    if(ESP_CONFIG_NUMBER == 1) {
+        gpio_set_level(BUZZER_GPIO, 1);
+    }
+    vTaskDelay(100 / portTICK_PERIOD_MS);
   }
 }
 static void log_error_if_nonzero(const char *message, int error_code)

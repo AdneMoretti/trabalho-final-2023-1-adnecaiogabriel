@@ -43,6 +43,8 @@ void mosquitto_event_data_parser(char *data)
 
     if(alerta == 1){
         security(tag);
+    } else {
+        
     }
 }
 
@@ -71,5 +73,30 @@ void send_sound(int *sound)
     }
 
     cJSON_AddNumberToObject(root, "sound", sound_toDouble);
+    mqtt_envia_mensagem("v1/devices/me/telemetry", cJSON_Print(root));
+}
+
+void send_stop_alarm(char *ALARM_TAG)
+{
+    cJSON *root = cJSON_CreateObject();
+    if (root == NULL)
+    {
+        ESP_LOGE(TAG, "Não foi possível criar o JSON");
+        return;
+    }
+    
+    double sound_toDouble = *(int *)sound;
+
+    cJSON *alarm = cJSON_CreateObject();
+    if (alarm == NULL)
+    {
+        ESP_LOGE(TAG, "Não foi possível criar o JSON");
+        return;
+    }
+
+    cJSON_AddNumberToObject(alarm, "Alerta", 0);
+    cJSON_AddStringToObject(alarm, "TAG", ALARM_TAG);
+    mosquitto_envia_mensagem("FSEACG/alarme", cJSON_Print(alarm));
+
     mqtt_envia_mensagem("v1/devices/me/telemetry", cJSON_Print(root));
 }
