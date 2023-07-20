@@ -9,12 +9,16 @@
 #include "dht11.h"
 #include "LED.h"
 #include "hall.h"
-
+#include "mosquitto.h"
 #include "wifi.h"
 #include "mqtt.h"
+<<<<<<< HEAD
 #include "mosquitto.h"
 #include "sound_sensor.h"
 #include "json_parser.h"
+=======
+// #include "sound_sensor.h"
+>>>>>>> 3818fc24561e098e1f3a0f78dbed7d2fac661de5
 #include "gpio_setup.h"
 #include <math.h>
 #define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
@@ -26,6 +30,7 @@
 SemaphoreHandle_t connectionWifiSemaphore;
 SemaphoreHandle_t connectionMQTTSemaphore;
 SemaphoreHandle_t reconnectionWifiSemaphore;
+
 
 float temp_media = 0;
 float humidity_media = 0;
@@ -85,7 +90,8 @@ void app_main(void)
     wifi_start();
 
     xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
-    xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
+    
+    // xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
 
     if(ESP_MODE == BATTERY_MODE) {
       if(ESP_CONFIG_NUMBER == 2) {

@@ -29,8 +29,12 @@ void configure_BUZZER(void)
 
 void configure_DHT11(void)
 {
-    esp_rom_gpio_pad_select_gpio(DHT11_PIN);
-    gpio_set_direction(DHT11_PIN, GPIO_MODE_OUTPUT);
+    // gpio_set_direction(DHT11_PIN, GPIO_MODE_OUTPUT);
+    gpio_set_level(DHT11_PIN, 0);
+    // ets_delay_us(20 * 1000);
+    gpio_set_level(DHT11_PIN, 1);
+    // ets_delay_us(40);
+    gpio_set_direction(DHT11_PIN, GPIO_MODE_INPUT);
 }
 
 void configure_HALL(void)
