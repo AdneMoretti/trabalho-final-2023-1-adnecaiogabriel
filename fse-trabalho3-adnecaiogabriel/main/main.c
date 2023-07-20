@@ -77,6 +77,12 @@ void app_main(void)
       simple_ota_example();
     }
 
+    int32_t ALARME=le_valor_nvs("alarme");
+
+    if(ALARME==1){
+      xTaskCreate(&security, "Ativar segurança", 4096, (void*)le_valor_nvs("tag"), 1, NULL);
+    }
+    
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
       ESP_ERROR_CHECK(nvs_flash_erase());
@@ -123,11 +129,5 @@ void app_main(void)
       } else {
         printf("ESP not identified");
       }
-    }
-
-    int32_t ALARME=le_valor_nvs("alarme");
-
-    if(ALARME==1){
-      xTaskCreate(&security, "Ativar segurança", 4096, (void*)le_valor_nvs("tag"), 1, NULL);
     }
 }

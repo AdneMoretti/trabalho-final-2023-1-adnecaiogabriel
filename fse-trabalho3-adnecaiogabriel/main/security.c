@@ -31,6 +31,7 @@ void security(char *tag)
   }
 
   grava_valor_nvs(1,"alarme");
+  grava_valor_nvs(ALARM_TAG,"tag");
 
   while (le_valor_nvs("alarme") == 1){
     if (ESP_CONFIG_NUMBER == 1) {
