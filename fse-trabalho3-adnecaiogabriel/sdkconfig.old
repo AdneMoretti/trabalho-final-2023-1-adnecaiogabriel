@@ -339,17 +339,17 @@ CONFIG_PARTITION_TABLE_MD5=y
 #
 # Configuração do Wifi
 #
-CONFIG_ESP_WIFI_SSID="Morettis"
-CONFIG_ESP_WIFI_PASSWORD="Crocop1984@"
+CONFIG_ESP_WIFI_SSID="ssid"
+CONFIG_ESP_WIFI_PASSWORD="minha_senha"
 CONFIG_ESP_MAXIMUM_RETRY=5
 # end of Configuração do Wifi
 
 #
 # Modo de Funcionamento
 #
-CONFIG_BATTERY=y
-# CONFIG_ENERGY is not set
-CONFIG_ESP_MODE=0
+# CONFIG_BATTERY is not set
+CONFIG_ENERGY=y
+CONFIG_ESP_MODE=1
 # end of Modo de Funcionamento
 
 #
@@ -365,6 +365,17 @@ CONFIG_ESP_CONFIG_NUMBER=0
 # Outros
 #
 # end of Outros
+
+#
+# Example Configuration
+#
+CONFIG_Desligado=y
+# CONFIG_Ligado is not set
+CONFIG_EXAMPLE_FIRMWARE_UPGRADE_URL="https://192.168.0.3:8070/hello_world.bin"
+CONFIG_EXAMPLE_USE_CERT_BUNDLE=y
+# CONFIG_EXAMPLE_SKIP_COMMON_NAME_CHECK is not set
+# CONFIG_EXAMPLE_FIRMWARE_UPGRADE_BIND_IF is not set
+# end of Example Configuration
 
 #
 # Compiler options

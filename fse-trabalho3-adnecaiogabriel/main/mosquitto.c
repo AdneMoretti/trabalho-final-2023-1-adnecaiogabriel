@@ -43,21 +43,6 @@ cJSON* create_message_json(float temperature, float humidity, int magnetic_signa
     return functionJSON;
 }
 
-void transformString(char* input) {
-    char* brace = strchr(input, '{');
-    if (brace != NULL) {
-        *brace = '\0'; // Truncate the string at the position of '{'
-    }
-
-    char* lastSlash = strrchr(input, '/');
-    if (lastSlash != NULL) {
-        char requestId[100];
-        strcpy(requestId, lastSlash + 1);
-        sprintf(input, "v1/devices/me/rpc/response/%s", requestId);
-    }
-}
-
-
 static void log_error_if_nonzero(const char *message, int error_code)
 {
     if (error_code != 0) {

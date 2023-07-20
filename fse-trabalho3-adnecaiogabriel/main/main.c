@@ -11,6 +11,7 @@
 #include "mosquitto.h"
 #include "wifi.h"
 #include "mqtt.h"
+#include "buzzer.h"
 // #include "sound_sensor.h"
 #include "gpio_setup.h"
 #include <math.h>
@@ -39,7 +40,7 @@ void wifi_connected(void * params)
     if(xSemaphoreTake(connectionWifiSemaphore, portMAX_DELAY))
     {
       mosquitto_start();
-      // mqtt_start();
+      mqtt_start();
     }
   }
 }
@@ -144,6 +145,7 @@ void app_main(void)
       if(ESP_CONFIG_NUMBER == 0) {
         xTaskCreate(&verifica_magnetic, "Verificando existencia de campo magnetico", 4096, NULL, 1, NULL);
         xTaskCreate(&check_temperature, "Verificando existencia de campo magnetico", 4096, NULL, 1, NULL);
+        setup();
         // xTaskCreate(&check_temperature, "Verificando existencia de campo magnetico", 4096, NULL, 1, NULL);
       } else if(ESP_CONFIG_NUMBER == 1) {
         
