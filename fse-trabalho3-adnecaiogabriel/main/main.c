@@ -14,12 +14,14 @@
 // #include "sound_sensor.h"
 #include "gpio_setup.h"
 #include <math.h>
+#include "global.h"
 #define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
-
+#include "nvs.h"
 #define ESP_MODE CONFIG_ESP_MODE
 #define BATTERY_MODE 0
 #define ENERGY_MODE 1
-
+#include "security.h"
+#include "simple_ota_example.h"
 SemaphoreHandle_t connectionWifiSemaphore;
 SemaphoreHandle_t connectionMQTTSemaphore;
 SemaphoreHandle_t reconnectionWifiSemaphore;
@@ -35,8 +37,8 @@ void wifi_connected(void * params)
   {
     if(xSemaphoreTake(connectionWifiSemaphore, portMAX_DELAY))
     {
-      // Processamento Internet
       mosquitto_start();
+      // mqtt_start();
     }
   }
 }
@@ -51,11 +53,11 @@ void handle_server_communication(void * params)
     {
        float temp = 20.0 + (float)rand()/(float)(RAND_MAX/10.0);
        
-    //    sprintf(mensagem, "{\"temperature\": %f}", temp);
-    //    mqtt_envia_mensagem("v1/devices/me/telemetry", mensagem);
+      //  sprintf(mensagem, "{\"temperature\": %f}", temp);
+      //  mqtt_envia_mensagem("v1/devices/me/telemetry", mensagem);
 
-    //    sprintf(jsonAtributos, "{\"quantidade de pinos\": 5, \n\"umidade\": 20}");
-    //    mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
+      //  sprintf(jsonAtributos, "{\"quantidade de pinos\": 5, \n\"umidade\": 20}");
+      //  mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
 
        vTaskDelay(3000 / portTICK_PERIOD_MS);
     }
@@ -67,9 +69,14 @@ float limit_decimal(float x, int decimal_places){
   return roundf(x*power)/power;
 }
 
-
 void app_main(void)
 {    
+  // xTaskCreate(&security,"conex",4096,1,1,NULL);
+    int MODO_OTA=0;
+    if(MODO_OTA==1){
+    simple_ota_example();
+    }
+    const char* alarme = "alarme";    
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
       ESP_ERROR_CHECK(nvs_flash_erase());
@@ -82,6 +89,34 @@ void app_main(void)
     wifi_start();
 
     xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
+    int32_t ALARME=le_valor_nvs(alarme);
+    ALARME=1;
+    grava_valor_nvs(ALARME,alarme);
+    int32_t caio=le_valor_nvs(alarme);
+    printf("%ld",caio);
+
+
+
+
+
+
+
+
+
+
+    // grava_valor_nvs(valor_lido,variable);
+    // esp_err_t ret = nvs_flash_init();
+    // if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+    //   ESP_ERROR_CHECK(nvs_flash_erase());
+    //   ret = nvs_flash_init();
+    // }
+    // ESP_ERROR_CHECK(ret);
+    // connectionWifiSemaphore = xSemaphoreCreateBinary();
+    // connectionMQTTSemaphore = xSemaphoreCreateBinary();
+    // reconnectionWifiSemaphore = xSemaphoreCreateBinary();
+    // wifi_start();
+
+    // xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
     
     // xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
 
