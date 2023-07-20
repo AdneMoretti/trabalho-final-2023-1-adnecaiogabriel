@@ -4537,6 +4537,135 @@
                 "children": [
                     {
                         "children": [],
+                        "depends_on": "<choice MODO_OTA>",
+                        "help": null,
+                        "id": "Desligado",
+                        "name": "Desligado",
+                        "range": null,
+                        "title": "desligado",
+                        "type": "bool"
+                    },
+                    {
+                        "children": [],
+                        "depends_on": "<choice MODO_OTA>",
+                        "help": null,
+                        "id": "Ligado",
+                        "name": "Ligado",
+                        "range": null,
+                        "title": "ligado",
+                        "type": "bool"
+                    }
+                ],
+                "depends_on": null,
+                "help": null,
+                "id": "example-configuration-ativar-o-modo-ota-",
+                "name": "MODO_OTA",
+                "title": "ativar o modo ota?",
+                "type": "choice"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": null,
+                "id": "MODO_OTA",
+                "name": "MODO_OTA",
+                "range": null,
+                "title": null,
+                "type": "int"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "URL of server which hosts the firmware\nimage.",
+                "id": "EXAMPLE_FIRMWARE_UPGRADE_URL",
+                "name": "EXAMPLE_FIRMWARE_UPGRADE_URL",
+                "range": null,
+                "title": "firmware upgrade url endpoint",
+                "type": "string"
+            },
+            {
+                "children": [],
+                "depends_on": "MBEDTLS_CERTIFICATE_BUNDLE",
+                "help": "Enable trusted root certificate bundle. This approach allows to have\nOTA updates functional with any public server without requirement\nto explicitly add its server certificate.",
+                "id": "EXAMPLE_USE_CERT_BUNDLE",
+                "name": "EXAMPLE_USE_CERT_BUNDLE",
+                "range": null,
+                "title": "Enable certificate bundle",
+                "type": "bool"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": null,
+                "id": "EXAMPLE_FIRMWARE_UPGRADE_URL_FROM_STDIN",
+                "name": "EXAMPLE_FIRMWARE_UPGRADE_URL_FROM_STDIN",
+                "range": null,
+                "title": null,
+                "type": "bool"
+            },
+            {
+                "children": [],
+                "depends_on": null,
+                "help": "This allows you to skip the validation of OTA server certificate CN field.",
+                "id": "EXAMPLE_SKIP_COMMON_NAME_CHECK",
+                "name": "EXAMPLE_SKIP_COMMON_NAME_CHECK",
+                "range": null,
+                "title": "Skip server certificate CN fieldcheck",
+                "type": "bool"
+            },
+            {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "depends_on": "EXAMPLE_CONNECT_WIFI && <choice EXAMPLE_FIRMWARE_UPGRADE_BIND_IF_TYPE>",
+                                "help": "Select wifi station interface to pass the OTA data.",
+                                "id": "EXAMPLE_FIRMWARE_UPGRADE_BIND_IF_STA",
+                                "name": "EXAMPLE_FIRMWARE_UPGRADE_BIND_IF_STA",
+                                "range": null,
+                                "title": "Bind wifi station interface",
+                                "type": "bool"
+                            },
+                            {
+                                "children": [],
+                                "depends_on": "EXAMPLE_CONNECT_ETHERNET && <choice EXAMPLE_FIRMWARE_UPGRADE_BIND_IF_TYPE>",
+                                "help": "Select ethernet interface to pass the OTA data.",
+                                "id": "EXAMPLE_FIRMWARE_UPGRADE_BIND_IF_ETH",
+                                "name": "EXAMPLE_FIRMWARE_UPGRADE_BIND_IF_ETH",
+                                "range": null,
+                                "title": "Bind ethernet interface",
+                                "type": "bool"
+                            }
+                        ],
+                        "depends_on": "EXAMPLE_FIRMWARE_UPGRADE_BIND_IF",
+                        "help": "Select which interface type of OTA data go through.",
+                        "id": "example-configuration-support-firmware-upgrade-bind-specified-interface-choose-ota-data-bind-interface",
+                        "name": "EXAMPLE_FIRMWARE_UPGRADE_BIND_IF_TYPE",
+                        "title": "Choose OTA data bind interface",
+                        "type": "choice"
+                    }
+                ],
+                "depends_on": null,
+                "help": "This allows you to bind specified interface in OTA example.",
+                "id": "EXAMPLE_FIRMWARE_UPGRADE_BIND_IF",
+                "name": "EXAMPLE_FIRMWARE_UPGRADE_BIND_IF",
+                "range": null,
+                "title": "Support firmware upgrade bind specified interface",
+                "type": "bool"
+            }
+        ],
+        "depends_on": null,
+        "id": "example-configuration",
+        "title": "Example Configuration",
+        "type": "menu"
+    },
+    {
+        "children": [
+            {
+                "children": [
+                    {
+                        "children": [],
                         "depends_on": "<choice COMPILER_OPTIMIZATION>",
                         "help": null,
                         "id": "COMPILER_OPTIMIZATION_DEFAULT",
