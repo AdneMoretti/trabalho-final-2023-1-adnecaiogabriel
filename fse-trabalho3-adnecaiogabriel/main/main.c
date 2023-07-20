@@ -28,6 +28,7 @@
 SemaphoreHandle_t connectionWifiSemaphore;
 SemaphoreHandle_t connectionMQTTSemaphore;
 SemaphoreHandle_t reconnectionWifiSemaphore;
+#include "security.h"
 
 
 float temp_media = 0;
@@ -43,12 +44,11 @@ void wifi_connected(void * params)
       // Processamento Internet
       mqtt_start();
       mosquitto_start();
-      // mqtt_start();
     }
   }
 }
 
-void handle_server_communication(void * params)
+void handle_server_communication(void)
 {
   char mensagem[50];
   char jsonAtributos[200];
@@ -56,14 +56,10 @@ void handle_server_communication(void * params)
   {
     while(true)
     {
-       float temp = 20.0 + (float)rand()/(float)(RAND_MAX/10.0);
-       
-      //  sprintf(mensagem, "{\"temperature\": %f}", temp);
-      //  mqtt_envia_mensagem("v1/devices/me/telemetry", mensagem);
-
-      //  sprintf(jsonAtributos, "{\"quantidade de pinos\": 5, \n\"umidade\": 20}");
-      //  mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
-
+       const char* alarme = "alarme";   
+       int32_t ALARME=le_valor_nvs(alarme);
+       sprintf(mensagem, "{\"alarme\": %ld}", ALARME);
+       mqtt_envia_mensagem("v1/devices/me/attributes", mensagem);
        vTaskDelay(3000 / portTICK_PERIOD_MS);
     }
   }
@@ -76,12 +72,11 @@ float limit_decimal(float x, int decimal_places){
 
 void app_main(void)
 {    
-  // xTaskCreate(&security,"conex",4096,1,1,NULL);
     int MODO_OTA=0;
     if(MODO_OTA==1){
-    simple_ota_example();
+      simple_ota_example();
     }
-    const char* alarme = "alarme";    
+
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
       ESP_ERROR_CHECK(nvs_flash_erase());
@@ -94,11 +89,9 @@ void app_main(void)
     wifi_start();
 
     xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
-    int32_t ALARME=le_valor_nvs(alarme);
-    grava_valor_nvs(ALARME,alarme);
 
     configure_ESP_BUTTON();
-    
+
     if(ESP_MODE == BATTERY_MODE) {
       if(ESP_CONFIG_NUMBER == 2) {
         //wake_up_with_gpio(16);
@@ -131,7 +124,10 @@ void app_main(void)
         printf("ESP not identified");
       }
     }
+
+    int32_t ALARME=le_valor_nvs("alarme");
+
+    if(ALARME==1){
+      xTaskCreate(&security, "Ativar segurança", 4096, (void*)le_valor_nvs("tag"), 1, NULL);
+    }
 }
-
-
-
