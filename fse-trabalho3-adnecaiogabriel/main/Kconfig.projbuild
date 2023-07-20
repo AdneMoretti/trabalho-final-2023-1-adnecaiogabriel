@@ -68,21 +68,6 @@ menu "Outros"
 endmenu
 
 menu "Example Configuration"
-    choice MODO_OTA
-        prompt "ativar o modo ota?"
-        default desligado
-  
-        config Desligado
-            bool "desligado"
-        config Ligado
-            bool "ligado"
-    endchoice
-  
-    config MODO_OTA
-      int
-      default 0 if desligado
-      default 1 if ligado
-
 
     config EXAMPLE_FIRMWARE_UPGRADE_URL
         string "firmware upgrade url endpoint"

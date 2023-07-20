@@ -20,20 +20,48 @@ void security()
   gpio_set_direction(BUZZER_GPIO, GPIO_MODE_OUTPUT);  
 
   gpio_set_level(BUZZER_GPIO,0);
+  printf("Ligado o Alarme");
+  gpio_set_level(BUZZER_GPIO, 1); //ACENDE O alarme
+  grava_valor_nvs(1,alarme);
   int flag=1;
-  while (flag==1){
-    if(gpio_get_level(SENSOR) == 1){ //SE A LEITURA DO SENSOR FOR IGUAL A HIGH, FAZ
-      printf("Desligou alarme\n");
-      gpio_set_level(BUZZER_GPIO, 0); //desliga o alarme
-      grava_valor_nvs(0,alarme);
-      vTaskDelay(100 / portTICK_PERIOD_MS);
-      flag=0;
-      vTaskDelete(NULL);
-    }else if(gpio_get_level(SENSOR) == 0){ //SE A LEITURA DO SENSOR FOR IGUAL A LOW, FAZ
-      printf("Ligado o Alarme");
-      gpio_set_level(BUZZER_GPIO, 1); //ACENDE O alarme
-      grava_valor_nvs(1,alarme);
-      vTaskDelay(100 / portTICK_PERIOD_MS);
-    }
+  while (flag == 1){
+  if(gpio_get_level(SENSOR)== 1){ //SE A LEITURA DO SENSOR FOR IGUAL A HIGH, FAZ
+    printf("Desligou alarme\n");
+    gpio_set_level(BUZZER_GPIO, 0); //desliga o alarme
+    grava_valor_nvs(0,alarme);
+    vTaskDelay(100 / portTICK_PERIOD_MS);
+    flag=0;
+    vTaskDelete(NULL);
   }
+}
+    // while (gpio_get_level(SENSOR) != 1){
+    // if(gpio_get_level(SENSOR) == 1){ //SE A LEITURA DO SENSOR FOR IGUAL A HIGH, FAZ
+    //   printf("Desligou alarme\n");
+    //   gpio_set_level(BUZZER_GPIO, 0); //desliga o alarme
+    //   grava_valor_nvs(0,alarme);
+    //   vTaskDelay(100 / portTICK_PERIOD_MS);
+    //   flag=0;
+    //   vTaskDelete(NULL);
+    // }else if(gpio_get_level(SENSOR) == 0){ //SE A LEITURA DO SENSOR FOR IGUAL A LOW, FAZ
+    //   printf("Ligado o Alarme");
+    //   gpio_set_level(BUZZER_GPIO, 1); //ACENDE O alarme
+    //   grava_valor_nvs(1,alarme);
+    //   vTaskDelay(100 / portTICK_PERIOD_MS);
+    // }
+
+  // while (flag==1){
+  //   if(gpio_get_level(SENSOR) == 1){ //SE A LEITURA DO SENSOR FOR IGUAL A HIGH, FAZ
+  //     printf("Desligou alarme\n");
+  //     gpio_set_level(BUZZER_GPIO, 0); //desliga o alarme
+  //     grava_valor_nvs(0,alarme);
+  //     vTaskDelay(100 / portTICK_PERIOD_MS);
+  //     flag=0;
+  //     vTaskDelete(NULL);
+  //   }else if(gpio_get_level(SENSOR) == 0){ //SE A LEITURA DO SENSOR FOR IGUAL A LOW, FAZ
+  //     printf("Ligado o Alarme");
+  //     gpio_set_level(BUZZER_GPIO, 1); //ACENDE O alarme
+  //     grava_valor_nvs(1,alarme);
+  //     vTaskDelay(100 / portTICK_PERIOD_MS);
+  //   }
+  // }
 }
