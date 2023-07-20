@@ -3,15 +3,9 @@
     "idf.flashType": "UART",
     "idf.port": "/dev/ttyUSB0",
     "files.associations": {
-<<<<<<< HEAD
         "err.h": "c",
         "adc_module.h": "c",
         "json_parser.h": "c",
         "mqtt_client.h": "c"
     }
 }
-=======
-        "JSONPARSER.C": "cpp"
-    }
-}
->>>>>>> 3818fc24561e098e1f3a0f78dbed7d2fac661de5
