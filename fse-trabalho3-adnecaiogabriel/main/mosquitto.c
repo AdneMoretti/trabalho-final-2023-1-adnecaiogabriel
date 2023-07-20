@@ -33,29 +33,29 @@ esp_mqtt_client_handle_t client;
 #define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
 #include "mosquitto.h"
 
-cJSON* message;
+// cJSON* message;
 
-cJSON* create_message_json(float temperature, float humidity, int magnetic_signal) {
-    cJSON* functionJSON = cJSON_CreateObject();
-    cJSON_AddNumberToObject(functionJSON, "temperature", temperature);
-    cJSON_AddNumberToObject(functionJSON, "humidity", humidity);
-    cJSON_AddNumberToObject(functionJSON, "parameters", magnetic_signal);
-    return functionJSON;
-}
+// cJSON* create_message_json(float temperature, float humidity, int magnetic_signal) {
+//     cJSON* functionJSON = cJSON_CreateObject();
+//     cJSON_AddNumberToObject(functionJSON, "temperature", temperature);
+//     cJSON_AddNumberToObject(functionJSON, "humidity", humidity);
+//     cJSON_AddNumberToObject(functionJSON, "parameters", magnetic_signal);
+//     return functionJSON;
+// }
 
-void transformString(char* input) {
-    char* brace = strchr(input, '{');
-    if (brace != NULL) {
-        *brace = '\0'; // Truncate the string at the position of '{'
-    }
+// void transformString(char* input) {
+//     char* brace = strchr(input, '{');
+//     if (brace != NULL) {
+//         *brace = '\0'; // Truncate the string at the position of '{'
+//     }
 
-    char* lastSlash = strrchr(input, '/');
-    if (lastSlash != NULL) {
-        char requestId[100];
-        strcpy(requestId, lastSlash + 1);
-        sprintf(input, "v1/devices/me/rpc/response/%s", requestId);
-    }
-}
+//     char* lastSlash = strrchr(input, '/');
+//     if (lastSlash != NULL) {
+//         char requestId[100];
+//         strcpy(requestId, lastSlash + 1);
+//         sprintf(input, "v1/devices/me/rpc/response/%s", requestId);
+//     }
+// }
 
 
 static void log_error_if_nonzero(const char *message, int error_code)
@@ -75,7 +75,8 @@ void mosquitto_event_data_parser(char* data)
     char *tag = cJSON_GetObjectItem(json, "TAG")->valuestring;
     printf("%s",tag);
     if(alerta == 1){
-                xTaskCreate(&security,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
+        xTaskCreate(&security,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
+        
     }
 }
 static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_t event_id, void *event_data)
@@ -110,7 +111,6 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
             printf("DATA=%.*s\r\n", event->data_len, event->data);
             if (ESP_CONFIG_NUMBER==1){
-                printf("oi");
                 mosquitto_event_data_parser(event->data);
                 // char* comp="1";
                 // printf("%s",event->data);

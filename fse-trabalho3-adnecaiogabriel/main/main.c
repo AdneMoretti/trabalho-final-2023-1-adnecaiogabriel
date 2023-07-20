@@ -11,7 +11,6 @@
 #include "mosquitto.h"
 #include "wifi.h"
 #include "mqtt.h"
-// #include "sound_sensor.h"
 #include "gpio_setup.h"
 #include <math.h>
 #include "global.h"
@@ -25,6 +24,7 @@
 SemaphoreHandle_t connectionWifiSemaphore;
 SemaphoreHandle_t connectionMQTTSemaphore;
 SemaphoreHandle_t reconnectionWifiSemaphore;
+#include "security.h"
 
 
 float temp_media = 0;
@@ -38,12 +38,12 @@ void wifi_connected(void * params)
     if(xSemaphoreTake(connectionWifiSemaphore, portMAX_DELAY))
     {
       mosquitto_start();
-      // mqtt_start();
+      mqtt_start();
     }
   }
 }
 
-void handle_server_communication(void * params)
+void handle_server_communication(void)
 {
   char mensagem[50];
   char jsonAtributos[200];
@@ -51,14 +51,10 @@ void handle_server_communication(void * params)
   {
     while(true)
     {
-       float temp = 20.0 + (float)rand()/(float)(RAND_MAX/10.0);
-       
-      //  sprintf(mensagem, "{\"temperature\": %f}", temp);
-      //  mqtt_envia_mensagem("v1/devices/me/telemetry", mensagem);
-
-      //  sprintf(jsonAtributos, "{\"quantidade de pinos\": 5, \n\"umidade\": 20}");
-      //  mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
-
+       const char* alarme = "alarme";   
+       int32_t ALARME=le_valor_nvs(alarme);
+       sprintf(mensagem, "{\"alarme\": %ld}", ALARME);
+       mqtt_envia_mensagem("v1/devices/me/attributes", mensagem);
        vTaskDelay(3000 / portTICK_PERIOD_MS);
     }
   }
@@ -71,12 +67,16 @@ float limit_decimal(float x, int decimal_places){
 
 void app_main(void)
 {    
-  // xTaskCreate(&security,"conex",4096,1,1,NULL);
     int MODO_OTA=0;
     if(MODO_OTA==1){
     simple_ota_example();
     }
-    const char* alarme = "alarme";    
+    const char* alarme = "alarme";   
+    int32_t ALARME=le_valor_nvs(alarme);
+    printf("Valor do alarme %ld",ALARME);
+    if(ALARME==1){
+      security();
+    }
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
       ESP_ERROR_CHECK(nvs_flash_erase());
@@ -89,70 +89,7 @@ void app_main(void)
     wifi_start();
 
     xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
-    int32_t ALARME=le_valor_nvs(alarme);
-    ALARME=1;
-    grava_valor_nvs(ALARME,alarme);
-    int32_t caio=le_valor_nvs(alarme);
-    printf("%ld",caio);
-
-
-
-
-
-
-
-
-
-
-    // grava_valor_nvs(valor_lido,variable);
-    // esp_err_t ret = nvs_flash_init();
-    // if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-    //   ESP_ERROR_CHECK(nvs_flash_erase());
-    //   ret = nvs_flash_init();
-    // }
-    // ESP_ERROR_CHECK(ret);
-    // connectionWifiSemaphore = xSemaphoreCreateBinary();
-    // connectionMQTTSemaphore = xSemaphoreCreateBinary();
-    // reconnectionWifiSemaphore = xSemaphoreCreateBinary();
-    // wifi_start();
-
-    // xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
-    
-    // xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
-
-    // if(ESP_MODE == BATTERY_MODE) {
-    //   if(ESP_CONFIG_NUMBER == 2) {
-    //     //wake_up_with_gpio(16);
-    //     while(1) {
-    //       vTaskDelay(1000 / portTICK_PERIOD_MS);
-    //       ESP_LOGI("Modo Funcionamento", "Bateria");
-    //     //   readShockSensorBatery();
-    //     //   light_sleep_task();
-    //       xTaskCreate(&wifi_connected,  "Conexão ao MQTT", 4096, NULL, 1, NULL);
-    //       xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
-    //     }
-    //   } else {
-    //     printf("ESP not identified");
-    //   }
-
-    // }
-    // else if(ESP_MODE == ENERGY_MODE) {
-    //   ESP_LOGI("Modo Funcionamento", "ENERGIA");
-      
-    //   if(ESP_CONFIG_NUMBER == 0) {
-    //     // DHT11_init(4);
-    //     // configure_HALL();
-    //     xTaskCreate(&mosquitto_start, "Verificando existencia de campo magnetico", 4096, NULL, 1, NULL);
-
-    //   } else if(ESP_CONFIG_NUMBER == 1) {
-        
-    //   // } else if(ESP_CONFIG_NUMBER == 2) {
-    //   //   configure_SOUND();
-    //   //   xTaskCreate(&check_sound, "Leitura Sensor de Som", 4096, NULL, 1, NULL);
-    //   } else {
-    //     printf("ESP not identified");
-    //   }
-    // }
+    xTaskCreate(&handle_server_communication, "Comunicação com Broker", 4096, NULL, 1, NULL);
 }
 
 

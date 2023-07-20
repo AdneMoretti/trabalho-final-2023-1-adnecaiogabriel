@@ -36,7 +36,6 @@ static void log_error_if_nonzero(const char *message, int error_code)
     }
 }
 void transformString(char* input) {
-    // Find the position of the opening brace '{'
     char* brace = strchr(input, '{');
     if (brace != NULL) {
         *brace = '\0'; // Truncate the string at the position of '{'
@@ -85,12 +84,13 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             printf("DATA=%.*s\r\n", event->data_len, event->data);
 
             if (ESP_CONFIG_NUMBER ==1){
-            transformString(event->topic);
-            printf("%s",event->topic);
-            char jsonAtributos[200];
-            sprintf(jsonAtributos, "{\"alarme\": true}");
-            printf("\n%s",jsonAtributos);
-            mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
+            // transformString(event->topic);
+            // printf("%s",event->topic);
+            // char jsonAtributos[200];
+            // sprintf(jsonAtributos, "{\"alarme\": 1}");
+            // printf("\n%s",jsonAtributos);
+            // mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
+            // vTaskDelay(1000 / portTICK_PERIOD_MS);
             }
             break;
         case MQTT_EVENT_ERROR:
