@@ -339,8 +339,8 @@ CONFIG_PARTITION_TABLE_MD5=y
 #
 # Configuração do Wifi
 #
-CONFIG_ESP_WIFI_SSID="ssid"
-CONFIG_ESP_WIFI_PASSWORD="minha_senha"
+CONFIG_ESP_WIFI_SSID="lappis"
+CONFIG_ESP_WIFI_PASSWORD="<%=lappiscontainer=%>"
 CONFIG_ESP_MAXIMUM_RETRY=5
 # end of Configuração do Wifi
 
@@ -355,10 +355,10 @@ CONFIG_ESP_MODE=1
 #
 # Seleção de Configuração de Placa
 #
-CONFIG_ESP0=y
+# CONFIG_ESP0 is not set
 # CONFIG_ESP1 is not set
-# CONFIG_ESP2 is not set
-CONFIG_ESP_CONFIG_NUMBER=0
+CONFIG_ESP2=y
+CONFIG_ESP_CONFIG_NUMBER=2
 # end of Seleção de Configuração de Placa
 
 #
@@ -367,8 +367,6 @@ CONFIG_ESP_CONFIG_NUMBER=0
 # end of Outros
 
 #
-<<<<<<< HEAD
-=======
 # Example Configuration
 #
 CONFIG_Desligado=y
@@ -380,7 +378,6 @@ CONFIG_EXAMPLE_USE_CERT_BUNDLE=y
 # end of Example Configuration
 
 #
->>>>>>> 1e13b11ad4e9c1e3daca5c5e853104e6cd5cc977
 # Compiler options
 #
 CONFIG_COMPILER_OPTIMIZATION_DEFAULT=y

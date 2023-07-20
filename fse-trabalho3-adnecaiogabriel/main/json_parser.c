@@ -1,5 +1,4 @@
 #include "cJSON.h"
-#include "cJSON.c"
 #include "mqtt.h"
 #include "esp_log.h"
 #include "esp_event.h"
@@ -78,7 +77,7 @@ void send_sound(int *sound)
     }
 
     cJSON_AddNumberToObject(root, "sound", sound_toDouble);
-    mqtt_envia_mensagem("v1/devices/me/telemetry", cJSON_Print(root));
+    mqtt_envia_mensagem("v1/devices/me/attributes", cJSON_Print(root));
 }
 
 void send_stop_alarm(char *ALARM_TAG)

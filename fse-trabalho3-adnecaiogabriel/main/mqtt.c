@@ -98,7 +98,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             if(strcmp(method, "setAlarm")==0){
                 value = cJSON_GetObjectItem(json, "params")->valueint;
                 send_dashboard_signal(value);
-                vTaskDelay(1000 / portTICK_PERIOD_MS);
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
             }
 
             if (ESP_CONFIG_NUMBER == 1){
@@ -106,6 +106,13 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
                 printf("%s",event->topic);
                 char jsonAtributos[200];
                 sprintf(jsonAtributos, "{\"alarme\": 1}");
+                printf("\n%s",jsonAtributos);
+                mqtt_envia_mensagem(event->topic,jsonAtributos);
+            }
+            if (ESP_CONFIG_NUMBER == 2){
+                transformString(event->topic);
+                char jsonAtributos[200];
+                sprintf(jsonAtributos, "{\"sound\": 1}");
                 printf("\n%s",jsonAtributos);
                 mqtt_envia_mensagem(event->topic,jsonAtributos);
             }

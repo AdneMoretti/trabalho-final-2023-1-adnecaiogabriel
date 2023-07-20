@@ -16,13 +16,12 @@
 #include "sound_sensor.h"
 #include "json_parser.h"
 #include "buzzer.h"
-// #include "sound_sensor.h"
 #include "gpio_setup.h"
 #include <math.h>
 #include "global.h"
 #include "light_sleep.h"
-#define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
 #include "nvs.h"
+#define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
 #define ESP_MODE CONFIG_ESP_MODE
 #define BATTERY_MODE 0
 #define ENERGY_MODE 1
@@ -79,9 +78,9 @@ void app_main(void)
     }
 
     int32_t ALARME=le_valor_nvs("alarme");
-
+    char *tag = le_string_nvs("tag");
     if(ALARME==1){
-      xTaskCreate(&security, "Ativar segurança", 4096, (void*)le_string_nvs("tag"), 1, NULL);
+      xTaskCreate(&security, "Ativar segurança", 4096, (void*)tag, 1, NULL);
     }
     
     esp_err_t ret = nvs_flash_init();
