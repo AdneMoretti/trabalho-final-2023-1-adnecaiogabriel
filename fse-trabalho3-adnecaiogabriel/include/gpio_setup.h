@@ -6,5 +6,6 @@ void configure_LED();
 void configure_DHT11();
 void configure_HALL();
 void configure_SOUND();
+void configure_ESP_BUTTON();
 
 #endif

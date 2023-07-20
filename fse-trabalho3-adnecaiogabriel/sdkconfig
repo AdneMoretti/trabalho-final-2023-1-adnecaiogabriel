@@ -367,6 +367,17 @@ CONFIG_ESP_CONFIG_NUMBER=2
 # end of Outros
 
 #
+# Example Configuration
+#
+CONFIG_Desligado=y
+# CONFIG_Ligado is not set
+CONFIG_EXAMPLE_FIRMWARE_UPGRADE_URL="https://192.168.0.3:8070/hello_world.bin"
+CONFIG_EXAMPLE_USE_CERT_BUNDLE=y
+# CONFIG_EXAMPLE_SKIP_COMMON_NAME_CHECK is not set
+# CONFIG_EXAMPLE_FIRMWARE_UPGRADE_BIND_IF is not set
+# end of Example Configuration
+
+#
 # Compiler options
 #
 CONFIG_COMPILER_OPTIMIZATION_DEFAULT=y

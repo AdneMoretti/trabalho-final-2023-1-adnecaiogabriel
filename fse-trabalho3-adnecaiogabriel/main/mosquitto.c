@@ -5,7 +5,6 @@
 #include "esp_system.h"
 #include "esp_event.h"
 #include "esp_netif.h"
-#include "cJSON.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -15,13 +14,16 @@
 #include "lwip/sockets.h"
 #include "lwip/dns.h"
 #include "lwip/netdb.h"
-
 #include "esp_log.h"
 #include "mqtt_client.h"
 #include <ctype.h>
 #include "mosquitto.h"
-#include "LED.h"
-#include "cJSON.h"
+#include "security.h"
+#include "mqtt.h"
+#include "security.h"
+#include "global.h"
+#include "json_parser.h"
+#include "driver/gpio.h"
 
 #define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
 
@@ -31,79 +33,6 @@
 extern SemaphoreHandle_t connectionMQTTSemaphore;
 esp_mqtt_client_handle_t client;
 
-#include "driver/gpio.h"
-#define TOUCH_SENSOR 15
-#define BUZZER_GPIO 2
-#define BUTTON_GPIO 0
-
-void security(char *ALARM_TAG)
-{
-  ESP_LOGI(TAG, "%s", ALARM_TAG);
-  // Configuração dos pinos dos LEDs 
-  esp_rom_gpio_pad_select_gpio(BUZZER_GPIO);   
-  esp_rom_gpio_pad_select_gpio(TOUCH_SENSOR);
-  // Configura os pinos dos LEDs como Output
-  gpio_set_direction(TOUCH_SENSOR, GPIO_MODE_INPUT);
-  gpio_set_direction(BUZZER_GPIO, GPIO_MODE_OUTPUT);
-
-  // Configuração do pino do Botão
-  // Configura o pino do Botão como Entrada
-  // Configura o resistor de Pulldown para o botão (por padrão a entrada estará em Zero)
-  // Testa o Botão utilizando polling
-  while (gpio_get_level(TOUCH_SENSOR) == 1 && gpio_get_level(BUTTON_GPIO) == 1){
-    ESP_LOGI(TAG, "%d", gpio_get_level(BUTTON_GPIO));
-
-    ESP_LOGI(TAG, "Ligado o Alarme");
-
-    // SE FOR A ESP DE LED E SOM:
-    if(ESP_CONFIG_NUMBER == 2) {
-        flashLEDs(ALARM_TAG);
-    }
-    // SE FOR A ESP DE BUZZER E TOQUE
-    if(ESP_CONFIG_NUMBER == 1) {
-        gpio_set_level(BUZZER_GPIO, 1);
-    }
-    vTaskDelay(100 / portTICK_PERIOD_MS);
-  }
-}
-// cJSON* message;
-
-cJSON* create_message_json(float temperature, float humidity, int magnetic_signal) {
-    cJSON* functionJSON = cJSON_CreateObject();
-    cJSON_AddNumberToObject(functionJSON, "temperature", temperature);
-    cJSON_AddNumberToObject(functionJSON, "humidity", humidity);
-    cJSON_AddNumberToObject(functionJSON, "parameters", magnetic_signal);
-    return functionJSON;
-}
-
-// void security(int ALARME)
-// {
-//   // Configuração dos pinos dos LEDs 
-//   esp_rom_gpio_pad_select_gpio(BUZZER_GPIO);   
-//   esp_rom_gpio_pad_select_gpio(SENSOR);
-//   // Configura os pinos dos LEDs como Output
-//   gpio_set_direction(SENSOR, GPIO_MODE_INPUT);
-//   gpio_set_direction(BUZZER_GPIO, GPIO_MODE_OUTPUT);  
-
-//   // Configuração do pino do Botão
-//   // Configura o pino do Botão como Entrada
-//   // Configura o resistor de Pulldown para o botão (por padrão a entrada estará em Zero)  
-//   gpio_set_level(BUZZER_GPIO,0);
-//     ALARME=ALARME;
-//   // Testa o Botão utilizando polling
-//   while (1){
-//     if(gpio_get_level(SENSOR) == 1){ //SE A LEITURA DO SENSOR FOR IGUAL A HIGH, FAZ
-//       printf("Desligou alarme");
-//       gpio_set_level(BUZZER_GPIO, 0); //desliga o alarme
-//       vTaskDelay(100 / portTICK_PERIOD_MS);
-//       break;
-//     }else if(gpio_get_level(SENSOR) == 0){ //SE A LEITURA DO SENSOR FOR IGUAL A LOW, FAZ
-//       printf("Ligado o Alarme");
-//       gpio_set_level(BUZZER_GPIO, 1); //ACENDE O alarme
-//       vTaskDelay(100 / portTICK_PERIOD_MS);
-//     }
-//   }
-// }
 static void log_error_if_nonzero(const char *message, int error_code)
 {
     if (error_code != 0) {
@@ -121,12 +50,6 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             ESP_LOGI(TAG, "MQTT_EVENT_CONNECTED");
             xSemaphoreGive(connectionMQTTSemaphore);
             esp_mqtt_client_subscribe(client, "FSEACG/alarme", 0);
-
-            // char jsonAtributos[200];
-            // sprintf(jsonAtributos, "{\"temperatura\": 123, \n\"umidade\": 20}");
-            // char response[200];
-            // sprintf(response, "v1/devices/me/attributes/request/%d", response_id);
-            // mqtt_envia_mensagem(response, '{"clientKeys":"temperatura"}');
             break;
         case MQTT_EVENT_DISCONNECTED:
             ESP_LOGI(TAG, "MQTT_EVENT_DISCONNECTED");
@@ -137,8 +60,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             // mosquitto_envia_mensagem("FSEACG/alarme", "1");
             // message = create_message_json(data.temperature, data.humidity, data.magnetic_signal);
             // mosquitto_envia_mensagem("FSEACG/alarme", "0");
-
-
+            
             break;
         case MQTT_EVENT_UNSUBSCRIBED:
             ESP_LOGI(TAG, "MQTT_EVENT_UNSUBSCRIBED, msg_id=%d", event->msg_id);
@@ -148,12 +70,12 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             break;
         case MQTT_EVENT_DATA:
             ESP_LOGI(TAG, "MQTT_EVENT_DATA");
-            
-            // mqtt_event_data_parser(event->data, event->topic);
             printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
             printf("DATA=%.*s\r\n", event->data_len, event->data);
             
-            mosquitto_event_data_parser(event->data);
+            if (ESP_CONFIG_NUMBER == 1 || ESP_CONFIG_NUMBER == 2) {
+                mosquitto_event_data_parser(event->data);
+            }
             
             break;
         case MQTT_EVENT_ERROR:
@@ -184,6 +106,6 @@ void mosquitto_start()
 
 void mosquitto_envia_mensagem(char * topico, char * mensagem)
 {
-    int message_id = esp_mqtt_client_publish(client, topico, mensagem, 0, 1, 0);
+    int message_id = esp_mqtt_client_publish(client, topico, mensagem, 0, 0, 0);
     ESP_LOGI(TAG, "Mensagem enviada, ID: %d", message_id);
 }

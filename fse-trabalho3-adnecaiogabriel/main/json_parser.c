@@ -5,6 +5,7 @@
 #include "esp_event.h"
 #include "mqtt_client.h"
 #include "mosquitto.h"
+#include "nvs.h"
 
 #define TAG "MQTT"
 #define SOUND_ALARM "SOUND_ALARM"
@@ -32,6 +33,11 @@ void mqtt_event_data_parser(char *data, char *topic)
     printf("State");
 }
 
+void stop_alarm()
+{
+    grava_valor_nvs(0,"alarme");
+}
+
 void mosquitto_event_data_parser(char *data)
 {
     cJSON *json = cJSON_Parse(data);
@@ -42,9 +48,9 @@ void mosquitto_event_data_parser(char *data)
     char *tag = cJSON_GetObjectItem(json, "TAG")->valuestring;
 
     if(alerta == 1){
-        security(tag);
+        xTaskCreate(&security, "Ativar segurança", 4096, (void*)tag, 1, NULL);
     } else {
-        
+        stop_alarm();
     }
 }
 
@@ -78,15 +84,6 @@ void send_sound(int *sound)
 
 void send_stop_alarm(char *ALARM_TAG)
 {
-    cJSON *root = cJSON_CreateObject();
-    if (root == NULL)
-    {
-        ESP_LOGE(TAG, "Não foi possível criar o JSON");
-        return;
-    }
-    
-    double sound_toDouble = *(int *)sound;
-
     cJSON *alarm = cJSON_CreateObject();
     if (alarm == NULL)
     {
@@ -97,6 +94,4 @@ void send_stop_alarm(char *ALARM_TAG)
     cJSON_AddNumberToObject(alarm, "Alerta", 0);
     cJSON_AddStringToObject(alarm, "TAG", ALARM_TAG);
     mosquitto_envia_mensagem("FSEACG/alarme", cJSON_Print(alarm));
-
-    mqtt_envia_mensagem("v1/devices/me/telemetry", cJSON_Print(root));
 }

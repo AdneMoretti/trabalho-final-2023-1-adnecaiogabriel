@@ -44,6 +44,11 @@ void flashLEDs(char *alarmTag) {
     r = 0;
     g = 0;
     b = 0;
+  } else if (strcmp(alarmTag, "DASHBOARD_ALARM") == 0) {
+    // Green light warning
+    r = 1;
+    g = 0;
+    b = 1;
   } else {
     // Turn off light if not recognized
     r = 1;
