@@ -122,12 +122,21 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             // printf("DATA=%.*s\r\n", event->data_len, event->data);
 
             if (ESP_CONFIG_NUMBER ==1){
+<<<<<<< HEAD
                 transformString(event->topic);
                 printf("%s",event->topic);
                 char jsonAtributos[200];
                 sprintf(jsonAtributos, "{\"alarme\": 1}");
                 printf("\n%s",jsonAtributos);
                 mqtt_envia_mensagem(event->topic,jsonAtributos);
+=======
+            transformString(event->topic);
+            printf("%s",event->topic);
+            char jsonAtributos[200];
+            sprintf(jsonAtributos, "{\"alarme\": true}");
+            printf("\n%s",jsonAtributos);
+            mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
+>>>>>>> 7c6ee367c3c293eeedbd11d959949274aa892587
             }
             break;
         case MQTT_EVENT_ERROR:

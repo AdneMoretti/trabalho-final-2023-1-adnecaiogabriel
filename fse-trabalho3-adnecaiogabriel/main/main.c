@@ -21,7 +21,8 @@
 #define ESP_MODE CONFIG_ESP_MODE
 #define BATTERY_MODE 0
 #define ENERGY_MODE 1
-
+#include "security.h"
+#include "simple_ota_example.h"
 SemaphoreHandle_t connectionWifiSemaphore;
 SemaphoreHandle_t connectionMQTTSemaphore;
 SemaphoreHandle_t reconnectionWifiSemaphore;
@@ -38,7 +39,7 @@ void wifi_connected(void * params)
     if(xSemaphoreTake(connectionWifiSemaphore, portMAX_DELAY))
     {
       mosquitto_start();
-      mqtt_start();
+      // mqtt_start();
     }
   }
 }
@@ -69,9 +70,13 @@ float limit_decimal(float x, int decimal_places){
   return roundf(x*power)/power;
 }
 
-
 void app_main(void)
 {    
+  // xTaskCreate(&security,"conex",4096,1,1,NULL);
+    int MODO_OTA=0;
+    if(MODO_OTA==1){
+    simple_ota_example();
+    }
     const char* alarme = "alarme";    
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -90,6 +95,16 @@ void app_main(void)
     grava_valor_nvs(ALARME,alarme);
     int32_t caio=le_valor_nvs(alarme);
     printf("%ld",caio);
+
+
+
+
+
+
+
+
+
+
     // grava_valor_nvs(valor_lido,variable);
     // esp_err_t ret = nvs_flash_init();
     // if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
