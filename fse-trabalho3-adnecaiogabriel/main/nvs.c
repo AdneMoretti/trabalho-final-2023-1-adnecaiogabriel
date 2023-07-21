@@ -233,7 +233,6 @@ void grava_string_nvs(char* valor,char *variable)
     nvs_handle particao_padrao_handle;
 
     esp_err_t res_nvs = nvs_open("armazenamento", NVS_READWRITE, &particao_padrao_handle);
-    // esp_err_t res_nvs = nvs_open_from_partition("DadosNVS", "armazenamento", NVS_READWRITE, &particao_padrao_handle);
     
     if(res_nvs == ESP_ERR_NVS_NOT_FOUND)
     {

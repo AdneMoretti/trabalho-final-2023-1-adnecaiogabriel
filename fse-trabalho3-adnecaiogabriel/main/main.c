@@ -72,17 +72,17 @@ float limit_decimal(float x, int decimal_places){
 
 void app_main(void)
 {    
-    int MODO_OTA=0;
-    if(MODO_OTA==1){
-      simple_ota_example();
+    // if(MODO_OTA==1){
+    //   simple_ota_example();
+    // }
+    if(ESP_CONFIG_NUMBER==1){
+      int32_t ALARME=le_valor_nvs("alarme");
+      char *tag = le_string_nvs("tag");
+      
+      if(ALARME==1){
+        xTaskCreate(&security, "Ativar segurança", 4096, (void*)tag, 1, NULL);
+      }
     }
-
-    int32_t ALARME=le_valor_nvs("alarme");
-    char *tag = le_string_nvs("tag");
-    if(ALARME==1){
-      xTaskCreate(&security, "Ativar segurança", 4096, (void*)tag, 1, NULL);
-    }
-    
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
       ESP_ERROR_CHECK(nvs_flash_erase());
