@@ -26,7 +26,6 @@ void light_sleep_task() {
 
     esp_light_sleep_start();
 
-    ESP_LOGI(TAG, "Sinal na GPIO despertou placa");
     esp_sleep_wakeup_cause_t causa = esp_sleep_get_wakeup_cause();
     if(causa != ESP_SLEEP_WAKEUP_TIMER){
         magnetic_signal = gpio_get_level(GPIO_HALL);
@@ -34,6 +33,7 @@ void light_sleep_task() {
     }
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     printf("O %s me acordou !\n", causa == ESP_SLEEP_WAKEUP_TIMER ? "TIMER" : "HALL");
+    wifi_start();
 }
 
 void wake_up_with_hall() {

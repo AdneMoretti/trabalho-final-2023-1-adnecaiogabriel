@@ -40,6 +40,7 @@ static void log_error_if_nonzero(const char *message, int error_code)
         ESP_LOGE(TAG, "Last error %s: 0x%x", message, error_code);
     }
 }
+
 void transformString(char* input) {
     char* brace = strchr(input, '{');
     if (brace != NULL) {
@@ -101,6 +102,13 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             vTaskDelay(1000 / portTICK_PERIOD_MS);
             }
 
+            if (ESP_CONFIG_NUMBER == 0){
+                transformString(event->topic);
+                char jsonAtributos[200];
+                sprintf(jsonAtributos, "{\"magnetic_signal\": 1}");
+                printf("\n%s",jsonAtributos);
+                mqtt_envia_mensagem(event->topic,jsonAtributos);
+            }
             if (ESP_CONFIG_NUMBER == 1){
                 transformString(event->topic);
                 printf("%s",event->topic);

@@ -11,10 +11,6 @@
 #define TAG_MAGNETIC "MAGNETIC_ALARM"
 #define TAG_DASHBOARD "DASHBOARD_ALARM"
 
-void set_attributes_states(char *key, int value, int topic_id)
-{
-}
-
 void mqtt_event_data_parser(char *data, char *topic)
 {
     cJSON *json = cJSON_Parse(data);
@@ -46,7 +42,7 @@ void mosquitto_event_data_parser(char *data)
     char *tag = cJSON_GetObjectItem(json, "TAG")->valuestring;
 
     if(alerta == 1){
-        xTaskCreate(&security, "Ativar segurança", 4096, (void*)tag, 1, NULL);
+        // xTaskCreate(&security, "Ativar segurança", 4096, NULL, 1, NULL);
     } else {
         stop_alarm();
     }
