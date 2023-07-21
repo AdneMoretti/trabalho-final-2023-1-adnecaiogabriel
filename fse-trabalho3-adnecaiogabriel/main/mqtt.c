@@ -93,7 +93,13 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             if (json == NULL) {
                 return;
             }
-
+            if (ESP_CONFIG_NUMBER == 0){
+                transformString(event->topic);
+                char jsonAtributos[200];
+                sprintf(jsonAtributos, "{\"magnetic_signal\": 1}");
+                printf("\n%s",jsonAtributos);
+                mqtt_envia_mensagem(event->topic,jsonAtributos);
+            }
             method = cJSON_GetObjectItem(json, "method")->valuestring;
             if(strcmp(method, "setAlarm")==0){
                 value = cJSON_GetObjectItem(json, "params")->valueint;

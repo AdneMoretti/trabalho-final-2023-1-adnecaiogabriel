@@ -17,6 +17,7 @@
 #include "json_parser.h"
 #include "buzzer.h"
 // #include "sound_sensor.h"
+#include "light_sleep.h"
 #include "gpio_setup.h"
 #include <math.h>
 #include "global.h"
@@ -80,9 +81,9 @@ void app_main(void)
 
     int32_t ALARME=le_valor_nvs("alarme");
 
-    if(ALARME==1){
-      xTaskCreate(&security, "Ativar segurança", 4096, (void*)le_string_nvs("tag"), 1, NULL);
-    }
+    // if(ALARME==1){
+    //   xTaskCreate(&security, "Ativar segurança", 4096, (void*)le_string_nvs("tag"), 1, NULL);
+    // }
     
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -118,7 +119,6 @@ void app_main(void)
       
       if(ESP_CONFIG_NUMBER == 0) {
         DHT11_init(4);
-        configure_HALL();
         xTaskCreate(&verifica_magnetic, "Verificando existencia de campo magnetico", 4096, NULL, 1, NULL);
         xTaskCreate(&check_temperature, "Verificando existencia de campo magnetico", 4096, NULL, 1, NULL);
       } else if(ESP_CONFIG_NUMBER == 1) {

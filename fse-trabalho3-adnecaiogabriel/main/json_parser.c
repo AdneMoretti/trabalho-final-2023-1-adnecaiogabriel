@@ -1,5 +1,4 @@
 #include "cJSON.h"
-#include "cJSON.c"
 #include "mqtt.h"
 #include "esp_log.h"
 #include "esp_event.h"
@@ -47,7 +46,7 @@ void mosquitto_event_data_parser(char *data)
     char *tag = cJSON_GetObjectItem(json, "TAG")->valuestring;
 
     if(alerta == 1){
-        xTaskCreate(&security, "Ativar segurança", 4096, (void*)tag, 1, NULL);
+        // xTaskCreate(&security, "Ativar segurança", 4096, NULL, 1, NULL);
     } else {
         stop_alarm();
     }
