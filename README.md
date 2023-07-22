@@ -63,3 +63,6 @@ Assim permitindo o acompanhamento dos acontecimentos do código em funcionamento
 
 A dashboard foi criada com [ThingsBoard](https://thingsboard.io/) e pode ser acessada em Dashboards com nome *"Server Security (AdneCaioGabriel)"*. Segue uma imagem do dash:
 
+![image](https://github.com/FGA-FSE/trabalho-final-2023-1-adnecaiogabriel/assets/64036847/bdbaab8e-7bce-409c-93e9-ee050d4fddc5)
+
+
