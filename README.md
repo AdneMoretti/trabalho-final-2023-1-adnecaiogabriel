@@ -8,7 +8,7 @@
 
 Neste repositório consta o código referente ao [trabalho final](https://gitlab.com/fse_fga/trabalhos-2023_1/trabalho-3-2023-1) da disciplina de Fundamentos de Sistemas Embarcados, que, em nosso caso, consiste em um sistema de gerenciamento e segurança de uma **sala de servidores**, utilizando 3 dispositivos **ESP32**, conexão **WIFI** e o protocolo **MQTT** para detectar a entrada e saída de indivíduos por meio de uma porta automática, detectar sons incomuns e também detectar falhas na temperatura e/ou umidade que possam afetar a sala de servidores de alguma forma, alertando assim por meio de um aviso sonoro e por um LED que piscará com uma cor de acordo com o motivo do alarme.
 
-Para melhor organização de estados e economia de energia também foram utilizados, respectivamento, o **NVS Flash** e o modo **Low Power** com light sleep, garantindo assim o melhor funcionamento do trabalho.
+Para melhor organização de estados e economia de energia também foram utilizados, respectivamente, o **NVS Flash** e o modo **Low Power** com light sleep, garantindo assim o melhor funcionamento do trabalho.
 
 # Hardware
 
