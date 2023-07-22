@@ -19,7 +19,6 @@
 #include <ctype.h>
 #include "mosquitto.h"
 #include "mqtt.h"
-#include "global.h"
 #include "driver/gpio.h"
 #include "json_parser.h"
 #include "nvs.h"

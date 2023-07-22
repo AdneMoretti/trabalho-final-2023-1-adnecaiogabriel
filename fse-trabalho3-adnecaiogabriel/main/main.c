@@ -18,7 +18,6 @@
 #include "buzzer.h"
 #include "gpio_setup.h"
 #include <math.h>
-#include "global.h"
 #include "light_sleep.h"
 #include "nvs.h"
 #define ESP_CONFIG_NUMBER CONFIG_ESP_CONFIG_NUMBER
@@ -26,7 +25,6 @@
 #define BATTERY_MODE 0
 #define ENERGY_MODE 1
 #include "security.h"
-#include "simple_ota_example.h"
 SemaphoreHandle_t connectionWifiSemaphore;
 SemaphoreHandle_t connectionMQTTSemaphore;
 SemaphoreHandle_t reconnectionWifiSemaphore;

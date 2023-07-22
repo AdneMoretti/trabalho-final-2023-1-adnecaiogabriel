@@ -21,7 +21,6 @@
 #include "esp_log.h"
 #include "mqtt_client.h"
 #include "cJSON.h"
-#include "global.h"
 #include "mqtt.h"
 
 #define TAG "MQTT"

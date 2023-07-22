@@ -5,7 +5,6 @@
 #include "freertos/queue.h"
 #include "esp_log.h"
 #include "driver/gpio.h"
-#include "global.h"
 #include "json_parser.h"
 #include "security.h"
 #include "nvs.h"
