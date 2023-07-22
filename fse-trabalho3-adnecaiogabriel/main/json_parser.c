@@ -4,6 +4,7 @@
 #include "esp_event.h"
 #include "mqtt_client.h"
 #include "mosquitto.h"
+#include "security.h"
 #include "nvs.h"
 
 #define TAG "MQTT"
@@ -42,7 +43,7 @@ void mosquitto_event_data_parser(char *data)
     char *tag = cJSON_GetObjectItem(json, "TAG")->valuestring;
 
     if(alerta == 1){
-        // xTaskCreate(&security, "Ativar segurança", 4096, NULL, 1, NULL);
+        xTaskCreate(&security, "Ativar segurança", 4096, NULL, 1, NULL);
     } else {
         stop_alarm();
     }

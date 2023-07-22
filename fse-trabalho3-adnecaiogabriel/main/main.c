@@ -32,7 +32,6 @@ SemaphoreHandle_t connectionMQTTSemaphore;
 SemaphoreHandle_t reconnectionWifiSemaphore;
 #include "security.h"
 
-
 float temp_media = 0;
 float humidity_media = 0;
 int cont_temp = 0;
@@ -101,9 +100,9 @@ void app_main(void)
 
     if(ESP_MODE == BATTERY_MODE) {
         if(ESP_CONFIG_NUMBER == 0) {
-        wake_up_with_hall();
-        configure_HALL();
-        printf("aqui");
+          wake_up_with_hall();
+          configure_HALL();
+          printf("aqui");
           while(1){
             ESP_LOGI("Modo Funcionamento", "Bateria");
             vTaskDelay(1000 / portTICK_PERIOD_MS);

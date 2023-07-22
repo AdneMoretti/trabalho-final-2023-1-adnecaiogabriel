@@ -1,6 +1,6 @@
 #ifndef SECURITY_H
 #define SECURITY_H
 
-// void security();
+void security(char *tag);
 
 #endif

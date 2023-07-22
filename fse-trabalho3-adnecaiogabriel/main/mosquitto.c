@@ -30,27 +30,6 @@
 extern SemaphoreHandle_t connectionMQTTSemaphore;
 esp_mqtt_client_handle_t client;
 
-// void stop_alarm()
-// {
-//     grava_valor_nvs(0,"alarme");
-// }
-
-// void mosquitto_event_data_parser(char *data)
-// {
-//     cJSON *json = cJSON_Parse(data);
-//     if (json == NULL)
-//         return;
-
-//     int alerta = cJSON_GetObjectItem(json, "Alerta")->valueint;
-//     char *tag = cJSON_GetObjectItem(json, "TAG")->valuestring;
-
-//     if(alerta == 1){
-//         xTaskCreate(&security, "Ativar segurança", 4096, NULL, 1, NULL);
-//     } else {
-//         stop_alarm();
-//     }
-// }
-
 static void log_error_if_nonzero(const char *message, int error_code)
 {
     if (error_code != 0) {
@@ -89,7 +68,7 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             printf("DATA=%.*s\r\n", event->data_len, event->data);
             
             if (ESP_CONFIG_NUMBER == 1 || ESP_CONFIG_NUMBER == 2) {
-                // mosquitto_event_data_parser(event->data);
+                mosquitto_event_data_parser(event->data);
             }
             
             break;
