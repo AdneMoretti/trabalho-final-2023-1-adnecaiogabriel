@@ -37,6 +37,12 @@ Como citado anteriormente, o hardware para esse repositório contém 3 dispositi
 
 # Como rodar
 
+É importante citar que o projeto que será executado está na pasta fse-trabalho3-adnecaiogabriel, portanto é necessário primeiro entrar na pasta, e abri-la no VSCode utilizando o comando no terminal:
+
+```bash
+code .                                                                                                                              
+```
+
 Para rodar, primeiro é necessário definir as variáveis de ambiente no menuconfig, utilizando o terminal da ESP-IDF e utilizando o comando:
 
 ```bash
