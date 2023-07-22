@@ -10,5 +10,7 @@ esp_err_t write_str(char* key, char* stringVal);
 char* read_str(char* key);
 int32_t le_valor_nvs(char *variable);
 void grava_valor_nvs(int32_t valor,char *variable);
+char* le_string_nvs(char *variable);
+void grava_string_nvs(char* valor,char *variable);
 
 #endif

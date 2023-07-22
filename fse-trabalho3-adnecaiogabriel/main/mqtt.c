@@ -7,6 +7,7 @@
 #include "esp_system.h"
 #include "esp_event.h"
 #include "esp_netif.h"
+#include "json_parser.h"
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -19,7 +20,7 @@
 
 #include "esp_log.h"
 #include "mqtt_client.h"
-#include "global.h"
+#include "cJSON.h"
 #include "mqtt.h"
 
 #define TAG "MQTT"
@@ -29,14 +30,17 @@ extern SemaphoreHandle_t connectionMQTTSemaphore;
 esp_mqtt_client_handle_t client_dash;
 esp_mqtt_client_handle_t client_esp;
 
+char *method;
+int value;
+
 static void log_error_if_nonzero(const char *message, int error_code)
 {
     if (error_code != 0) {
         ESP_LOGE(TAG, "Last error %s: 0x%x", message, error_code);
     }
 }
+
 void transformString(char* input) {
-    // Find the position of the opening brace '{'
     char* brace = strchr(input, '{');
     if (brace != NULL) {
         *brace = '\0'; // Truncate the string at the position of '{'
@@ -81,16 +85,43 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
             break;
         case MQTT_EVENT_DATA:
             ESP_LOGI(TAG, "MQTT_EVENT_DATA");
+            
             printf("TOPIC=%.*s\r\n", event->topic_len, event->topic);
             printf("DATA=%.*s\r\n", event->data_len, event->data);
 
-            if (ESP_CONFIG_NUMBER ==1){
-            transformString(event->topic);
-            printf("%s",event->topic);
-            char jsonAtributos[200];
-            sprintf(jsonAtributos, "{\"alarme\": true}");
-            printf("\n%s",jsonAtributos);
-            mqtt_envia_mensagem("v1/devices/me/attributes", jsonAtributos);
+            cJSON *json = cJSON_Parse(event->data);
+            if (json == NULL) {
+                return;
+            }
+
+            method = cJSON_GetObjectItem(json, "method")->valuestring;
+            if(strcmp(method, "setAlarm")==0){
+                value = cJSON_GetObjectItem(json, "params")->valueint;
+                send_dashboard_signal(value);
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
+            }
+
+            if (ESP_CONFIG_NUMBER == 0){
+                transformString(event->topic);
+                char jsonAtributos[200];
+                sprintf(jsonAtributos, "{\"magnetic_signal\": 1}");
+                printf("\n%s",jsonAtributos);
+                mqtt_envia_mensagem(event->topic,jsonAtributos);
+            }
+            if (ESP_CONFIG_NUMBER == 1){
+                transformString(event->topic);
+                printf("%s",event->topic);
+                char jsonAtributos[200];
+                sprintf(jsonAtributos, "{\"alarme\": 1}");
+                printf("\n%s",jsonAtributos);
+                mqtt_envia_mensagem(event->topic,jsonAtributos);
+            }
+            if (ESP_CONFIG_NUMBER == 2){
+                transformString(event->topic);
+                char jsonAtributos[200];
+                sprintf(jsonAtributos, "{\"sound\": 1}");
+                printf("\n%s",jsonAtributos);
+                mqtt_envia_mensagem(event->topic,jsonAtributos);
             }
             break;
         case MQTT_EVENT_ERROR:

@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ * 
+ * Copyright (c) 2018 Michele Biondi
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+*/
+
 #include "esp_timer.h"
 #include "driver/gpio.h"
 #include "rom/ets_sys.h"
@@ -5,10 +29,12 @@
 #include "freertos/task.h"
 
 #include "dht11.h"
+#include "json_parser.h"
 
 static gpio_num_t dht_gpio;
 static int64_t last_read_time = -2000000;
 static struct dht11_reading last_read;
+static struct dht11_reading data;
 
 static int _waitOrTimeout(uint16_t microSeconds, int level) {
     int micros_ticks = 0;
@@ -67,6 +93,7 @@ void DHT11_init(gpio_num_t gpio_num) {
 struct dht11_reading DHT11_read() {
     /* Tried to sense too son since last read (dht11 needs ~2 seconds to make a new read) */
     if(esp_timer_get_time() - 2000000 < last_read_time) {
+        printf("%d %d", last_read.temperature, last_read.humidity);
         return last_read;
     }
 
@@ -95,8 +122,21 @@ struct dht11_reading DHT11_read() {
         last_read.status = DHT11_OK;
         last_read.temperature = data[2];
         last_read.humidity = data[0];
+        printf("%d %d", last_read.temperature, last_read.humidity);
         return last_read;
     } else {
+        printf("%d %d", last_read.temperature, last_read.humidity);
         return last_read = _crcError();
+    }
+}
+
+void check_temperature(){
+    // DHT11_init(4);
+    while(1){
+        data = DHT11_read();
+        if(data.temperature !=-1 && data.humidity != -1){
+            send_temperature_telemetry(data.temperature, data.humidity);
+        }
+        vTaskDelay(2000 /  portTICK_PERIOD_MS);
     }
 }
